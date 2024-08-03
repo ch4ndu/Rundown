@@ -31,8 +31,8 @@ import SwiftUI
 
     @objc public func makeViewController() -> UIViewController {
         if (controller == nil) {
-//            controller = UIHostingController(rootView: PieChartView(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag))
             controller = UIHostingController(rootView: PieChartView(viewData: viewData))
+//            controller = PieChartViewController()
         }
         
         return controller ?? UIViewController()

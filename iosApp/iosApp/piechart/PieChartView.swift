@@ -14,6 +14,7 @@ struct PieChartView: View {
 //    let pieEntriesMap: [String: Double]
 //    let setActiveTag: (String) -> Void
     @ObservedObject var viewData: ObservableViewData
+    
     var body: some View {
         VStack {
             Text("Got pieChart data with \(viewData.pieEntriesMap.count) values")
@@ -40,13 +41,3 @@ struct PieChartView: View {
 //        // No need to update anything here
 //    }
 //}
-
-class ObservableViewData: ObservableObject {
-    @Published var pieEntriesMap: [String: Double]
-    @Published var setActiveTag: (String) -> Void
-
-    init(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void) {
-        self.pieEntriesMap = pieEntriesMap
-        self.setActiveTag = setActiveTag
-    }
-}
