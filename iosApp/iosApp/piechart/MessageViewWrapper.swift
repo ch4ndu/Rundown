@@ -10,9 +10,9 @@ import SwiftUI
 import UIKit
 
 @objc
-class MessageViewWrapper: NSObject {
+public class MessageViewWrapper: NSObject {
     @objc
-    static func makeMessageViewControllerWithMessage(_ message: NSString) -> UIViewController {
+    public static func makeMessageViewControllerWithMessage(_ message: NSString) -> UIViewController {
         return UIHostingController(rootView: MessageView(message: message as String))
     }
 }

@@ -1,5 +1,7 @@
 package app.ui
 
+import android.content.Context
+import android.widget.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -150,5 +152,20 @@ actual fun PieChart(
         } catch (exception: IndexOutOfBoundsException) {
             highlightEntry.value = null
         }
+    }
+}
+
+
+
+fun PlatformView(viewData: String): @Composable () -> Unit {
+    return {
+        AndroidView(
+            factory = { context: Context ->
+                Button(context)
+            },
+            update = { view ->
+                view.isEnabled = false
+            }
+        )
     }
 }

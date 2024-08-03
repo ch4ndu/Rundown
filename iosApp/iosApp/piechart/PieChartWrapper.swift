@@ -10,24 +10,40 @@ import Foundation
 import SwiftUI
 
 @objc public class PieChartWrapper: NSObject {
-    let pieEntriesMap: [String: Double]
-    let setActiveTag: (String) -> Void
+//    var pieEntriesMap: [String: Double]
+//    var setActiveTag: (String) -> Void
+    private var viewData: ObservableViewData
+    var controller: UIViewController? = nil
     
     @objc override init() {
-        self.pieEntriesMap = [:]
-        self.setActiveTag = { }
+        self.viewData = ObservableViewData(pieEntriesMap: [:], setActiveTag: { (test) -> () in
+            
+        })
+//        self.pieEntriesMap = [:]
+//        self.setActiveTag = { (test) -> () in }
     }
 
     @objc init(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void ) {
-        self.pieEntriesMap = pieEntriesMap
-        self.setActiveTag = setActiveTag
+        self.viewData = ObservableViewData(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag)
+//        self.pieEntriesMap = pieEntriesMap
+//        self.setActiveTag = setActiveTag
     }
 
     @objc public func makeViewController() -> UIViewController {
-        return UIHostingController(rootView: PieChartView(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag))
+        if (controller == nil) {
+//            controller = UIHostingController(rootView: PieChartView(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag))
+            controller = UIHostingController(rootView: PieChartView(viewData: viewData))
+        }
+        
+        return controller ?? UIViewController()
     }
     
     @objc public func getView() -> UIView {
         return makeViewController().view
+    }
+    
+    @objc public func updateData(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void ) {
+        self.viewData.pieEntriesMap = pieEntriesMap
+        self.viewData.setActiveTag = setActiveTag
     }
 }

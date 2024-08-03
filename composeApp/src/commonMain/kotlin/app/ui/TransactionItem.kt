@@ -45,8 +45,11 @@ fun TransactionItem(
         log.d { "transaction: $item" }
     }) {
         val adjustedAmount = item.displayWithCurrency
-        val amountTextColor =
-            if (accountId == item.source_id?.toString()) item.amountTextColorForSameSource else item.amountTextColor
+        val amountTextColor = item.amountTextColor
+//            if (accountId == item.source_id?.toString())
+//                item.amountTextColorForSameSource
+//            else
+//                item.amountTextColor
 
         val dimensions = FireflyAppTheme.dimensions
         val greenColor = GreenAlpha

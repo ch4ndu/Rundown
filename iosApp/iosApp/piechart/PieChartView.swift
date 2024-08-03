@@ -11,28 +11,42 @@ import Foundation
 import SwiftUI
 
 struct PieChartView: View {
-    let pieEntriesMap: [String: Double]
-    let setActiveTag: (String) -> Void
+//    let pieEntriesMap: [String: Double]
+//    let setActiveTag: (String) -> Void
+    @ObservedObject var viewData: ObservableViewData
     var body: some View {
-            Text("Hello from SwiftUI!")
+        VStack {
+            Text("Got pieChart data with \(viewData.pieEntriesMap.count) values")
                 .padding()
+                .font(.system(size: 20))
         }
+    }
 }
 
 
 
-struct PieChartViewWrapper: UIViewControllerRepresentable {
-    let pieEntriesMap: [String: Double]
-    let setActiveTag: (String) -> Void
-    
-    func makeUIViewController(context: Context) -> UIViewController {
-        
+//@objc public struct PieChartViewWrapper: UIViewControllerRepresentable {
+//    let pieEntriesMap: [String: Double]
+//    let setActiveTag: (String) -> Void
+//    
+//    @objc public func makeUIViewController(context: Context) -> UIViewController {
+//        
+////        let hostingController = UIHostingController(rootView: PieChartView(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag))
 //        let hostingController = UIHostingController(rootView: PieChartView(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag))
-        let hostingController = UIHostingController(rootView: PieChartView(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag))
-        return hostingController
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        // No need to update anything here
+//        return hostingController
+//    }
+//    
+//    @objc public func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+//        // No need to update anything here
+//    }
+//}
+
+class ObservableViewData: ObservableObject {
+    @Published var pieEntriesMap: [String: Double]
+    @Published var setActiveTag: (String) -> Void
+
+    init(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void) {
+        self.pieEntriesMap = pieEntriesMap
+        self.setActiveTag = setActiveTag
     }
 }

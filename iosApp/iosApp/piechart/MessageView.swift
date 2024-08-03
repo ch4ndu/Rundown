@@ -11,7 +11,7 @@ import SwiftUI
 struct MessageView: View {
     let message: String
     var body: some View {
-        Text(message)
+        Text("Fucking message")
             .padding()
             .background(Color.blue)
             .foregroundColor(.white)
