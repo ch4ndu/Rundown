@@ -1,0 +1,8 @@
+
+kotlin.collections.*
+com.app.model.**
+com.data.database.model.**
+com.data.database.enums.**
+com.domain.model.enums.**
+com.domain.AuthState
+com.domain.NetworkLoadState

@@ -1,0 +1,3 @@
+language = Objective-C
+headers = SwiftUIView.swift
+compilerOpts = -F$(inherited) -framework UIKit -framework SwiftUI

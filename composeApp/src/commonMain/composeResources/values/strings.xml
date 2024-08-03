@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accounts_tab_title">Accounts</string>
+    <string name="transactions_screen_title">Transactions</string>
+    <string name="reports_tab_title">Reports</string>
+    <string name="categories_tab_title">Categories</string>
+    <string name="budgets_tab_title">Budgets</string>
+    <string name="dashboard_tab_title">Dashboard</string>
+    <string name="categories">Categories</string>
+    <string name="spending">Spending</string>
+
+    <string name="login">Login</string>
+    <string name="back_navigation_icon">Back</string>
+</resources>
