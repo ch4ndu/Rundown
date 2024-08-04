@@ -10,8 +10,6 @@ import Foundation
 import SwiftUI
 
 @objc public class PieChartWrapper: NSObject {
-//    var pieEntriesMap: [String: Double]
-//    var setActiveTag: (String) -> Void
     private var viewData: ObservableViewData
     var controller: UIViewController? = nil
     
@@ -19,20 +17,15 @@ import SwiftUI
         self.viewData = ObservableViewData(pieEntriesMap: [:], setActiveTag: { (test) -> () in
             
         })
-//        self.pieEntriesMap = [:]
-//        self.setActiveTag = { (test) -> () in }
     }
 
     @objc init(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void ) {
         self.viewData = ObservableViewData(pieEntriesMap: pieEntriesMap, setActiveTag: setActiveTag)
-//        self.pieEntriesMap = pieEntriesMap
-//        self.setActiveTag = setActiveTag
     }
 
     @objc public func makeViewController() -> UIViewController {
         if (controller == nil) {
             controller = UIHostingController(rootView: PieChartView(viewData: viewData))
-//            controller = PieChartViewController()
         }
         
         return controller ?? UIViewController()
