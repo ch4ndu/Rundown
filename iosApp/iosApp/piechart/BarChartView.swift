@@ -14,7 +14,7 @@ import UIKit
 
 struct BarChartData: Identifiable {
     let id = UUID()
-    let dateString: String
+    let date: NSDate
     let expenseAmount: Float
     let incomeAmount: Float
 }
@@ -42,7 +42,7 @@ struct BarChartView: View {
     @ViewBuilder
     private func createChart() -> some View {
         Chart(observableBarData.barchartData) { barData in
-            let dateString = barData.dateString
+            let dateString = barData.date.formatDate()
             let amount = Double(barData.expenseAmount)
             // Bar for each DataPoint
             BarMark(

@@ -13,10 +13,14 @@ import com.chandu.BarChartWrapper
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
+import kotlinx.cinterop.convert
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeFormat
 import org.lighthousegames.logging.logging
+import platform.Foundation.NSCalendar
+import platform.Foundation.NSDate
+import platform.Foundation.NSDateComponents
 import platform.UIKit.UIViewController
 
 /**
@@ -44,10 +48,10 @@ actual fun BarChart(
                 mapOf<Any?, List<Float>>()
             }
 
-            val temp: (String?) -> Unit = { dateString ->
+            val temp: (NSDate?) -> Unit = { dateString ->
                 log.d { "itemClicked: $dateString" }
                 dateString?.let { dateString ->
-                    expenseIncomeDataList.firstOrNull { it.date.format(DateSerializer.chartMonthYearFormat) == dateString }
+                    expenseIncomeDataList.firstOrNull { it.date.toNsDate() == dateString }
                         ?.let(dataSelected)
                 }
             }
@@ -58,7 +62,7 @@ actual fun BarChart(
                         log.d { "handling ExpenseIncomeData" }
                         val tempMap: Map<Any?, *> =
                             dataList.filterIsInstance<ExpenseIncomeData>().associate {
-                                it.date.format(DateSerializer.chartMonthYearFormat) to listOf(
+                                it.date.toNsDate() to listOf(
                                     it.expenseAmount,
                                     it.incomeAmount
                                 )
@@ -78,7 +82,7 @@ actual fun BarChart(
                     if (expenseIncomeDataList.isNotEmpty()) {
                         val tempMap: Map<Any?, *> =
                             expenseIncomeDataList.associate {
-                                it.date.format(DateSerializer.chartMonthYearFormat) to listOf(
+                                it.date.toNsDate() to listOf(
                                     it.expenseAmount,
                                     it.incomeAmount
                                 )
@@ -94,4 +98,16 @@ actual fun BarChart(
             }
         }
     }
+}
+
+private fun LocalDateTime.toNsDate(): NSDate? {
+    val calendar = NSCalendar.currentCalendar
+    val components = NSDateComponents()
+    components.year = this.year.convert()
+    components.month = this.monthNumber.convert()
+    components.day = this.dayOfMonth.convert()
+    components.hour = this.hour.convert()
+    components.minute = this.minute.convert()
+    components.second = this.second.convert()
+    return calendar.dateFromComponents(components)
 }

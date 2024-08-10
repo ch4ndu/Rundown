@@ -14,11 +14,11 @@ import Charts
 
 class ObservableBarData: ObservableObject {
     @Published var barchartData: [BarChartData]
-    @Published var dateSelected: (String) -> Void
+    @Published var dateSelected: (NSDate) -> Void
     
     @Published var selectedBarData: BarChartData? = nil
     
-    init(barchartData: [BarChartData], dateSelected: @escaping (String) -> Void) {
+    init(barchartData: [BarChartData], dateSelected: @escaping (NSDate) -> Void) {
         self.barchartData = barchartData
         self.dateSelected = dateSelected
     }
@@ -34,10 +34,10 @@ class ObservableBarData: ObservableObject {
     func updateSelectedMonth(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {
         let xPosition = location.x - geometry[proxy.plotAreaFrame].origin.x
         if let dateString: String = proxy.value(atX: xPosition) {
-            selectedBarData = barchartData.first { $0.dateString == dateString }
+            selectedBarData = barchartData.first { $0.date.formatDate() == dateString }
         }
         if let barData = selectedBarData {
-            dateSelected(barData.dateString)
+            dateSelected(barData.date)
         }
     }
     

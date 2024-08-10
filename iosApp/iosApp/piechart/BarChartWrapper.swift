@@ -14,14 +14,15 @@ import SwiftUI
     private var observableBarChartData: ObservableBarData
     
     
-    @objc public func update(expenseIncomeData: [String: [Float]], dateSelected: @escaping (String) -> Void) {
+    @objc public func update(expenseIncomeData: [NSDate: [Float]], dateSelected: @escaping (NSDate) -> Void) {
         var barDataList: [BarChartData] = []
         print("got data: size:\(expenseIncomeData.count)")
         print("got data: keys:\(expenseIncomeData.keys)")
         print("got data: values:\(expenseIncomeData.values)")
-        expenseIncomeData.keys.forEach { dateString in
-            barDataList.append(BarChartData(dateString: dateString, expenseAmount: expenseIncomeData[dateString]?[0] ?? 0, incomeAmount: (expenseIncomeData[dateString]?[1] ?? 0)))
+        expenseIncomeData.keys.forEach { date in
+            barDataList.append(BarChartData(date: date, expenseAmount: expenseIncomeData[date]?[0] ?? 0, incomeAmount: (expenseIncomeData[date]?[1] ?? 0)))
         }
+        barDataList.sort(by: {$0.date.compare($1.date as Date) == .orderedDescending})
         self.observableBarChartData.barchartData = barDataList
         self.observableBarChartData.dateSelected = dateSelected
     }
