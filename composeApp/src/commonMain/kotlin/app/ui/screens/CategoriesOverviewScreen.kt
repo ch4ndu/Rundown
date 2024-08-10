@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +42,9 @@ import app.ui.BarChart
 import app.ui.DetailsIconButton
 import app.ui.ThemedBox
 import app.ui.TopAppBarActionButton
+import app.ui.getAspectRatio
 import app.ui.getDisplayOverView
+import app.ui.isLargeScreen
 import app.viewmodel.CategoriesOverviewViewModel
 import data.database.serializers.DateSerializer
 import domain.atBeginningOfMonth
@@ -108,6 +111,11 @@ fun CategoriesOverviewScreen(
 //            onBack.invoke()
 //        }
 //    }
+
+    val isLargeScreen = isLargeScreen()
+    val aspectRatio = remember(isLargeScreen.value) {
+        getAspectRatio(isLargeScreen.value)
+    }
     BottomSheetScaffold(
         scaffoldState = modalSheetState,
         sheetContent = {
@@ -187,7 +195,8 @@ fun CategoriesOverviewScreen(
                                     BarChart(
                                         dataList = categorySpending.expenseIncomeData,
                                         modifier = Modifier
-                                            .height(256.dp),
+                                            .fillMaxWidth()
+                                            .aspectRatio(aspectRatio),
                                         dateTimeFormatter = DateSerializer.chartMonthYearFormat,
                                         dataSelected = {}
                                     )

@@ -29,7 +29,7 @@ fun Float.getTextColorForAmount(): Color {
     }
 }
 
-fun getAspectRatio(isLargeScreen: Boolean): Float = if (isLargeScreen) 1.75f else 2f
+fun getAspectRatio(isLargeScreen: Boolean): Float = if (isLargeScreen) 1.75f else 1.25f
 
 fun CategorySpending.getDisplayOverView(): AnnotatedString {
     return buildAnnotatedString {

@@ -529,8 +529,8 @@ fun AccountPieChart(
                         .fillMaxWidth()
                         .aspectRatio(1f),
                     pieEntriesMap = itemSumMap.map {
-                        it.key to it.value.let {
-                            it.incomeSum + it.expenseSum + it.transferSum
+                        it.key to it.value.let { totals ->
+                            totals.incomeSum + totals.expenseSum + totals.transferSum
                         }
                     }.toMap(),
                     setActiveTag = setActiveItem,

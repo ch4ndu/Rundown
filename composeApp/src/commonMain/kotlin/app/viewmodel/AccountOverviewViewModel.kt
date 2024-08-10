@@ -7,7 +7,6 @@ import app.model.TotalsSummary
 import app.ui.areDateRangesEquivalent
 import data.database.dao.FireFlyTransactionDataDao
 import data.database.model.transaction.FireFlyTransaction
-import data.enums.ExpenseType
 import di.DispatcherProvider
 import domain.model.DateRange
 import domain.repository.TransactionRepository

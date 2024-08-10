@@ -12,10 +12,16 @@ import SwiftUI
 
 class ObservableViewData: ObservableObject {
     @Published var pieEntriesMap: [String: Double]
+    @Published var pieSegments: [PieSegment]
     @Published var setActiveTag: (String) -> Void
+    
+    var totalValue: Double {
+        pieSegments.map { $0.value }.reduce(0, +)
+    }
 
-    init(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void) {
+    init(pieEntriesMap: [String: Double],setActiveTag: @escaping (String) -> Void, pieSegments: [PieSegment]) {
         self.pieEntriesMap = pieEntriesMap
         self.setActiveTag = setActiveTag
+        self.pieSegments = pieSegments
     }
 }

@@ -1,5 +1,6 @@
 package app.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -15,17 +16,10 @@ actual fun PieChart(
     pieEntriesMap: Map<String, Double>,
     setActiveTag: (String) -> Unit
 ) {
-    val pieWrapper = remember {
-        val wrapper = PieChartWrapper()
-//        val temp: (String?) -> Unit = {
-//            it?.let(setActiveTag)
-//        }
-//        val tempMap: Map<Any?, *> = pieEntriesMap.mapKeys { it.key }
-//        wrapper.updateDataWithPieEntriesMap(pieEntriesMap = tempMap, setActiveTag = temp)
-        wrapper
-    }
+    val pieWrapper = remember { PieChartWrapper() }
     val controller = remember { pieWrapper.makeViewController() }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(pieEntriesMap) {
+        // swift expects nullable parameter here
         val temp: (String?) -> Unit = {
             it?.let(setActiveTag)
         }
@@ -33,7 +27,7 @@ actual fun PieChart(
         pieWrapper.updateDataWithPieEntriesMap(pieEntriesMap = tempMap, setActiveTag = temp)
     }
     UIKitViewController(
-        modifier = modifier, factory = {
+        modifier = modifier.fillMaxSize(), factory = {
             controller as UIViewController
         },
         update = {

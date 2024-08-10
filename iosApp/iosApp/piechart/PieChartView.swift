@@ -17,36 +17,57 @@ struct PieSegment: Identifiable {
     let value: Double
 }
 
-//struct NewPieChartView: View {
 struct PieChartView: View {
     @ObservedObject var viewData: ObservableViewData
-    let data: [PieSegment] = [
-        PieSegment(name: "Apples", value: 40),
-        PieSegment(name: "Bananas", value: 30),
-        PieSegment(name: "Cherries", value: 20),
-        PieSegment(name: "Dates", value: 100)
-    ]
+    @State var selectedSegment: PieSegment? = nil
+    @State private var selectedAngle: Double? = nil
     
     var body: some View {
         if #available(iOS 17.0, *) {
-            Chart {
-                ForEach(data) { segment in
-                    SectorMark(
-                        angle: .value("Value", segment.value),
-                        angularInset: 1
-                    )
-                    .foregroundStyle(by: .value("Name", segment.name))
+            ZStack {
+                Chart {
+                    ForEach(viewData.pieSegments) { segment in
+                        SectorMark(
+                            angle: .value("Value", segment.value),
+                            //                            innerRadius: .ratio(selectedSegment?.name == segment.name ? 0.5 : 0.6),
+                            outerRadius: .ratio(selectedSegment?.name == segment.name ? 1.0 : 0.9),
+                            angularInset: 1.0
+                        )
+                        .foregroundStyle(by: .value("Name", segment.name))
+                        //                        .cornerRadius(6.0)
+                        .opacity(selectedSegment?.name == segment.name ? 1.0 : 0.8)
+                    }
+                }
+                .chartAngleSelection(value: $selectedAngle)
+                .chartLegend(.hidden)
+                .background(Color.clear)
+                .onChange(of: selectedAngle) { oldValue, newValue in
+                    if let newValue {
+                        selectedSegment = findSelectedSegment(value: newValue)
+                        if let selectedSegment {
+                            viewData.setActiveTag(selectedSegment.name)
+                        }
+                    }
                 }
             }
-            .chartLegend(.visible)
-            .frame(height: 300)
         } else {
             // Fallback on earlier versions
-                VStack {
-                    Text("Unsupported version")
-                        .padding()
-                        .font(.system(size: 20))
-                }
+            VStack {
+                Text("Unsupported version")
+                    .padding()
+                    .font(.system(size: 20))
+            }
         }
+    }
+    private func findSelectedSegment(value: Double) -> PieSegment? {
+        
+        var accumulatedCount = 0.0
+        
+        let temp = viewData.pieSegments.first { (segment) in
+            accumulatedCount += segment.value
+            return value <= accumulatedCount
+        }
+        
+        return temp
     }
 }

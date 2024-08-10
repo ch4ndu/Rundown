@@ -5,7 +5,9 @@ package app.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +15,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,6 +23,8 @@ import app.theme.FireflyAppTheme
 import app.ui.AppBarWithBack
 import app.ui.BarChart
 import app.ui.TransactionItem
+import app.ui.getAspectRatio
+import app.ui.isLargeScreen
 import app.viewmodel.CategoryDetailsViewModel
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseIncomeData
@@ -38,6 +43,10 @@ fun CategoryDetailsScreen(
 //    BackHandler(enabled = true) {
 //        onBack.invoke()
 //    }
+    val isLargeScreen = isLargeScreen()
+    val aspectRatio = remember(isLargeScreen.value) {
+        getAspectRatio(isLargeScreen.value)
+    }
     LaunchedEffect(Unit) {
         categoryDetailsViewModel.setSelectedCategory(selectedCategory)
     }
@@ -63,9 +72,7 @@ fun CategoryDetailsScreen(
 
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            AppBarWithBack(title = categoryName.value) {
-                onBack.invoke()
-            }
+            AppBarWithBack(title = categoryName.value, backClicked = onBack)
             val listState = rememberLazyListState()
             LazyColumn(
                 state = listState,
@@ -80,7 +87,8 @@ fun CategoryDetailsScreen(
                 ) {
                     BarChart(
                         modifier = Modifier
-                            .height(256.dp),
+                            .fillMaxWidth()
+                            .aspectRatio(aspectRatio),
                         dataList = spendingDataList ?: emptyList(),
                         showPersistedMarkers = true,
                         dateTimeFormatter = DateSerializer.chartMonthYearFormat,
