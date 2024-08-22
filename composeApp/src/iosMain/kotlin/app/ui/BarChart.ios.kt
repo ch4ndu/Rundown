@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalForeignApi::class)
+
 package app.ui
 
 import androidx.compose.foundation.layout.Box
@@ -10,12 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitViewController
 import app.model.MergeMode
 import com.chandu.BarChartWrapper
-import data.database.serializers.DateSerializer
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.convert
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeFormat
 import org.lighthousegames.logging.logging
 import platform.Foundation.NSCalendar
@@ -24,7 +25,7 @@ import platform.Foundation.NSDateComponents
 import platform.UIKit.UIViewController
 
 /**
- * [dataList] accepts [ExpenseIncomeData] or [ExpenseData]
+ * dataList accepts [ExpenseIncomeData] or [ExpenseData]
  */
 private val log = logging()
 
@@ -40,13 +41,11 @@ actual fun BarChart(
 ) {
     if (dataList.isNotEmpty()) {
         if (dataList[0] is ExpenseIncomeData) {
-            val expenseIncomeDataList = dataList.filterIsInstance<ExpenseIncomeData>()
-
+            val expenseIncomeDataList = remember(dataList) {
+                dataList.filterIsInstance<ExpenseIncomeData>()
+            }
             val barWrapper = remember { BarChartWrapper() }
             val controller = remember { barWrapper.makeViewController() }
-            var swiftMap: Map<Any?, *> = remember {
-                mapOf<Any?, List<Float>>()
-            }
 
             val temp: (NSDate?) -> Unit = { dateString ->
                 log.d { "itemClicked: $dateString" }
@@ -60,14 +59,12 @@ actual fun BarChart(
                 if (expenseIncomeDataList.isNotEmpty()) {
                     if (dataList[0] is ExpenseIncomeData) {
                         log.d { "handling ExpenseIncomeData" }
-                        val tempMap: Map<Any?, *> =
-                            dataList.filterIsInstance<ExpenseIncomeData>().associate {
+                        val tempMap: Map<Any?, *> = expenseIncomeDataList.associate {
                                 it.date.toNsDate() to listOf(
                                     it.expenseAmount,
                                     it.incomeAmount
                                 )
                             }
-                        swiftMap = tempMap
                         barWrapper.updateWithExpenseIncomeData(tempMap, temp)
                     }
                 }
@@ -80,14 +77,12 @@ actual fun BarChart(
                 },
                 update = {
                     if (expenseIncomeDataList.isNotEmpty()) {
-                        val tempMap: Map<Any?, *> =
-                            expenseIncomeDataList.associate {
+                        val tempMap: Map<Any?, *> = expenseIncomeDataList.associate {
                                 it.date.toNsDate() to listOf(
                                     it.expenseAmount,
                                     it.incomeAmount
                                 )
                             }
-                        swiftMap = tempMap
                         barWrapper.updateWithExpenseIncomeData(tempMap, temp)
                     }
                 }

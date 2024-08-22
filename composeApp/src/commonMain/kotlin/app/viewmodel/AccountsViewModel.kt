@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import org.lighthousegames.logging.logging
 
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
-class AccountsViewModel(
+abstract class AccountsViewModel(
     private val accountRepository: AccountRepository,
     private val dispatcherProvider: DispatcherProvider,
     private val syncWithServerUseCase: SyncWithServerUseCase,
@@ -26,7 +26,7 @@ class AccountsViewModel(
 
     private val accountType = MutableStateFlow("asset")
 
-    val accountList = accountType.flatMapLatest { accountType ->
+    open val accountList = accountType.flatMapLatest { accountType ->
         accountRepository.getAccountList(accountType)
     }
 
@@ -43,7 +43,7 @@ class AccountsViewModel(
 //        }
 //    }
 
-    val lastSyncedAt = appPref.lastSyncedAt()
+    open val lastSyncedAt = appPref.lastSyncedAt()
         .flowOn(dispatcherProvider.io)
         .shareIn(
             scope = viewModelScope,
@@ -53,7 +53,7 @@ class AccountsViewModel(
 
     private val log = logging()
 
-    fun refreshData() {
+    open fun refreshData() {
         log.d { "refreshRemoteData" }
         viewModelScope.launch(dispatcherProvider.default) {
             syncWithServerUseCase.invoke()

@@ -4,8 +4,10 @@ package app.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import data.database.dao.FireFlyTransactionDataDao
+import data.database.serializers.DateSerializer
 import di.DispatcherProvider
 import domain.atBeginningOfMonth
+import domain.model.DateRange
 import domain.model.ExpenseIncomeData
 import domain.repository.TransactionRepository
 import domain.usecase.GetCategorySpendingUseCase
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.datetime.LocalDateTime
 
 class CategoryDetailsViewModel(
     private val transactionRepository: TransactionRepository,
@@ -31,6 +34,18 @@ class CategoryDetailsViewModel(
 ) {
 
     private val spendingDateSelected = MutableStateFlow<ExpenseIncomeData?>(null)
+
+    fun setDateRange(
+        startDate: String,
+        endDate: String
+    ) {
+        setDateRange(
+            DateRange(
+                startDate = LocalDateTime.parse(startDate, DateSerializer.isoFormat),
+                endDate = LocalDateTime.parse(endDate, DateSerializer.isoFormat)
+            )
+        )
+    }
 
     //    val selectedCategory = savedStateHandle.getStateFlow("category", "")
     val selectedCategory = MutableStateFlow("")

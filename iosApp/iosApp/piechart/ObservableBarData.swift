@@ -41,12 +41,21 @@ class ObservableBarData: ObservableObject {
         }
     }
     
-    func maxValue() -> Float {
-        let max = barchartData.map { $0.expenseAmount }.max() ?? 0
+    func maxPointValue() -> Float {
+        let max = barchartData.map { $0.expenseAmount + $0.incomeAmount }.max() ?? 0
         if( max <= 100) {
-            return 300
+            return 400
         } else {
-            return max + max/5
+            return max
+        }
+    }
+    
+    func calcMaxValue() -> Float {
+        let max = barchartData.map { $0.expenseAmount + $0.incomeAmount }.max() ?? 0
+        if( max <= 100) {
+            return 400
+        } else {
+            return max + max/10
         }
     }
 }

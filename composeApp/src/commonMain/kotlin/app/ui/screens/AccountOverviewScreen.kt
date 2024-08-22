@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,6 +58,8 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,6 +76,7 @@ import app.theme.HaloBlue
 import app.ui.AccountOverview
 import app.ui.AppBarWithBackAndOptions
 import app.ui.PieChart
+import app.ui.Savers
 import app.ui.TopAppBarActionButton
 import app.ui.TransactionItem
 import app.ui.getTextColorForAmount
@@ -117,7 +121,7 @@ fun AccountOverviewScreen(
     onBack: () -> Unit,
     onAccountCashFlowDetailsClick: (DateRange) -> Unit
 ) {
-    //TODO workaround until koin supports savedStateHandle
+    // TODO workaround until koin supports savedStateHandle
     LaunchedEffect(Unit) {
         accountOverviewViewModel.setAccountId(accountId)
         accountChartsViewModel.setAccountId(accountId)
@@ -127,7 +131,7 @@ fun AccountOverviewScreen(
         accountOverviewViewModel.activeTag.value = tag
     }
 
-    val selectedDateRange = remember {
+    var selectedDateRange = rememberSaveable(saver = Savers.DateRange) {
         val initialEnd =
             Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).withStartOfDay()
         mutableStateOf(
@@ -180,7 +184,8 @@ fun AccountOverviewScreen(
     // Categories
     val activeCategory =
         accountOverviewViewModel.activeCategory.collectAsStateWithLifecycle(initialValue = "")
-    val categorySum = accountOverviewViewModel.categorySummaryAccount.collectAsStateWithLifecycle(
+    val categorySum =
+        accountOverviewViewModel.categorySummaryAccount.collectAsStateWithLifecycle(
         initialValue = emptyMap()
     )
     val transactionsForActiveCategory =
@@ -406,45 +411,45 @@ private fun ShowTopBar(
                     }
                 }
             }
-            TopAppBarActionButton(
-                painterResource(resource = Res.drawable.filter_menu),
-                description = "Filter"
-            ) {
-            }
-            TopAppBarActionButton(
-                imageVector = Icons.Outlined.MoreVert,
-                description = "Options"
-            ) {
-                dropDownMenuExpanded.value = true
-            }
-
-            DropdownMenu(
-                expanded = dropDownMenuExpanded.value,
-                onDismissRequest = {
-                    dropDownMenuExpanded.value = false
-                },
-                offset = DpOffset(x = 10.dp, y = (-60).dp)
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        Text("Refresh")
-                    },
-                    onClick = {
-//                        Toast.makeText(context, "Refresh Click", Toast.LENGTH_SHORT)
-//                            .show()
-                        dropDownMenuExpanded.value = false
-                    })
-
-                DropdownMenuItem(
-                    text = {
-                        Text("Settings")
-                    },
-                    onClick = {
-//                        Toast.makeText(context, "Settings Click", Toast.LENGTH_SHORT)
-//                            .show()
-                        dropDownMenuExpanded.value = false
-                    })
-            }
+//            TopAppBarActionButton(
+//                painterResource(resource = Res.drawable.filter_menu),
+//                description = "Filter"
+//            ) {
+//            }
+//            TopAppBarActionButton(
+//                imageVector = Icons.Outlined.MoreVert,
+//                description = "Options"
+//            ) {
+//                dropDownMenuExpanded.value = true
+//            }
+//
+//            DropdownMenu(
+//                expanded = dropDownMenuExpanded.value,
+//                onDismissRequest = {
+//                    dropDownMenuExpanded.value = false
+//                },
+//                offset = DpOffset(x = 10.dp, y = (-60).dp)
+//            ) {
+//                DropdownMenuItem(
+//                    text = {
+//                        Text("Refresh")
+//                    },
+//                    onClick = {
+////                        Toast.makeText(context, "Refresh Click", Toast.LENGTH_SHORT)
+////                            .show()
+//                        dropDownMenuExpanded.value = false
+//                    })
+//
+//                DropdownMenuItem(
+//                    text = {
+//                        Text("Settings")
+//                    },
+//                    onClick = {
+////                        Toast.makeText(context, "Settings Click", Toast.LENGTH_SHORT)
+////                            .show()
+//                        dropDownMenuExpanded.value = false
+//                    })
+//            }
         }
     )
 
@@ -601,11 +606,8 @@ fun AccountTransactions(
         state = listState,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = dimensions.contentMargin,
-                end = dimensions.contentMargin
-            )
+            .fillMaxSize(),
+        contentPadding = PaddingValues(all = dimensions.contentMargin)
     ) {
         item {
             Spacer(modifier = Modifier.height(tabRowHeight))

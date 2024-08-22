@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,6 +43,7 @@ import app.theme.FireflyAppTheme
 import app.ui.AppBarWithOptions
 import app.ui.BarChart
 import app.ui.DetailsIconButton
+import app.ui.Savers
 import app.ui.ThemedBox
 import app.ui.TopAppBarActionButton
 import app.ui.getAspectRatio
@@ -67,7 +71,7 @@ private val log = logging()
 @Composable
 fun CategoriesOverviewScreen(
     categoriesOverviewViewModel: CategoriesOverviewViewModel = koinViewModel(),
-    onCategoryDetailsClick: (category: String) -> Unit,
+    onCategoryDetailsClick: (category: String, dateRange: DateRange) -> Unit,
     onBack: () -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -91,10 +95,10 @@ fun CategoriesOverviewScreen(
         )
     )
 
-    val selectedDateRange = remember {
+    val selectedDateRange = rememberSaveable(saver = Savers.DateRange) {
         mutableStateOf(
             DateRange(
-                currentDate().minusMonths(11).atBeginningOfMonth().withStartOfDay(),
+                currentDate().minusMonths(5).atBeginningOfMonth().withStartOfDay(),
                 currentDate().withEndOfMonthAtEndOfDay()
             )
         )
@@ -157,11 +161,8 @@ fun CategoriesOverviewScreen(
                     state = listState,
                     verticalArrangement = Arrangement.spacedBy(dimensions.listSpacing),
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = dimensions.contentMargin,
-                            end = dimensions.contentMargin
-                        )
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(all = dimensions.contentMargin)
                 ) {
                     categorySpending.value.forEach { categorySpending ->
                         item { Spacer(modifier = Modifier.height(dimensions.listSpacing)) }
@@ -176,7 +177,7 @@ fun CategoriesOverviewScreen(
                                 DetailsIconButton(
                                     boxScope = this,
                                 ) {
-                                    onCategoryDetailsClick.invoke(categorySpending.categoryName)
+                                    onCategoryDetailsClick.invoke(categorySpending.categoryName, selectedDateRange.value)
                                 }
                                 Column {
                                     Text(
@@ -231,11 +232,11 @@ private fun ShowTopBar(
                     }
                 }
             }
-            TopAppBarActionButton(
-                painterResource(resource = Res.drawable.filter_menu),
-                description = "Filter"
-            ) {
-            }
+//            TopAppBarActionButton(
+//                painterResource(resource = Res.drawable.filter_menu),
+//                description = "Filter"
+//            ) {
+//            }
         }
     )
 

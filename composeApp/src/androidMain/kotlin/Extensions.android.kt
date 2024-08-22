@@ -62,7 +62,7 @@ fun ExpenseData.toChartLabel(
     } else {
         builder.append(
             "\r\n${expenseAmount.toDouble().getDisplayWithCurrency("$")}",
-            ForegroundColorSpan(GrillRed.toArgb()),
+            ForegroundColorSpan(if (expenseAmount > 0) DeltaGekko.toArgb() else GrillRed.toArgb()),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }

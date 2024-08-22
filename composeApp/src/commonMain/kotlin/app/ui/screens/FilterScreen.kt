@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,22 +67,11 @@ fun FilterScreen(
     val lastThreeMonths = DateRange(today.minusMonths(2).atBeginningOfMonth(), today)
     val lastSixMonths = DateRange(today.minusMonths(5).atBeginningOfMonth(), today)
     val thisYear = DateRange(today.withStartOfYear(), today)
-    val lastYear = DateRange(
-        today.minusYearsAtBeginning(1),
-        today.minusYearsAtEnd(1)
-    )
-    val lastYearToDate = DateRange(
-        today.minusYearsAtBeginning(1),
-        today
-    )
-    val lastTwoYears = DateRange(
-        today.minusYearsAtBeginning(2),
-        today
-    )
-    val lastThreeYears = DateRange(
-        today.minusYearsAtBeginning(3),
-        today
-    )
+    val lastYear = DateRange(today.minusYearsAtBeginning(1), today.minusYearsAtEnd(1))
+    val lastYearToDate = DateRange(today.minusYearsAtBeginning(1), today)
+    val lastTwoYears = DateRange(today.minusYearsAtBeginning(2), today)
+    val lastThreeYears = DateRange(today.minusYearsAtBeginning(3), today)
+
     val filterList = listOf(
         Pair("Last 3 Months", lastThreeMonths),
         Pair("Last 6 Months", lastSixMonths),
@@ -94,6 +84,9 @@ fun FilterScreen(
 
     val quickFilterSelected = remember {
         mutableStateOf(filterList[0])
+    }
+    LaunchedEffect(Unit) {
+        filterList.find { it.second.getFilterDisplay() == dateRange.getFilterDisplay() }?.let { quickFilterSelected.value = it }
     }
     val screenHeight = screenHeight()
     val currentYear = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year

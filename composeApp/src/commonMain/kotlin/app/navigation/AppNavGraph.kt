@@ -48,9 +48,13 @@ private fun NavGraphBuilder.addCategoriesScreen(navController: NavHostController
             modifier = Modifier.fillMaxSize(),
             color = FireflyAppTheme.colorScheme.background
         ) {
-            CategoriesOverviewScreen(onCategoryDetailsClick = { category ->
+            CategoriesOverviewScreen(onCategoryDetailsClick = { category, dateRange ->
                 navController.navigate(
-                    Route.Categories.CategoryDetails(category)
+                    Route.Categories.CategoryDetails(
+                        category,
+                        dateRange.startDate.format(DateSerializer.isoFormat),
+                        dateRange.endDate.format(DateSerializer.isoFormat)
+                    )
                 )
             }, onBack = {
                 navController.popBackStack()
@@ -64,7 +68,11 @@ private fun NavGraphBuilder.addCategoriesScreen(navController: NavHostController
             modifier = Modifier.fillMaxSize(),
             color = FireflyAppTheme.colorScheme.background
         ) {
-            CategoryDetailsScreen(selectedCategory = categoryDetails.category) {
+            CategoryDetailsScreen(
+                selectedCategory = categoryDetails.category,
+                startDate = categoryDetails.startDate,
+                endDate = categoryDetails.endDate
+            ) {
                 navController.popBackStack()
             }
         }

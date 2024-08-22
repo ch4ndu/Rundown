@@ -29,12 +29,7 @@ fun LocalDateTime.atBeginningOfMonth(): LocalDateTime {
     val tz = TimeZone.currentSystemDefault()
 
     return this.date.atStartOfDayIn(tz)
-        .minus(
-            period = DateTimePeriod(
-                days = this.dayOfMonth - 1
-            ),
-            timeZone = tz
-        )
+        .minus(period = DateTimePeriod(days = this.dayOfMonth - 1), timeZone = tz)
         .toLocalDateTime(tz)
 }
 
@@ -89,90 +84,35 @@ fun LocalDateTime.withEndOfMonthAtEndOfDay(): LocalDateTime {
                 days = this.month.number.monthLength(isLeapYear(this.year)) - this.dayOfMonth
             ),
             timeZone = tz
-        ).plus(
-            period = DateTimePeriod(
-                hours = 23,
-                minutes = 59,
-                seconds = 59
-            ),
-            timeZone = tz
-        )
+        ).plus(period = DateTimePeriod(hours = 23, minutes = 59, seconds = 59), timeZone = tz)
         .toLocalDateTime(tz)
 }
 
 fun LocalDateTime.withStartOfYear(): LocalDateTime {
-    val tz = TimeZone.currentSystemDefault()
-    return this.date
-        .atStartOfDayIn(tz)
-        .minus(
-            period = DateTimePeriod(
-                months = monthNumber - 1
-            ),
-            timeZone = tz
-        )
-        .minus(
-            period = DateTimePeriod(
-                days = this.month.number.monthLength(isLeapYear(this.year)) - this.dayOfMonth + 1
-            ),
-            timeZone = tz
-        )
-        .toLocalDateTime(tz)
+    return this.minusMonths(monthNumber - 1).atBeginningOfMonth()
 }
 
 fun LocalDateTime.minusYearsAtBeginning(years: Int): LocalDateTime {
     val tz = TimeZone.currentSystemDefault()
     return this.date
         .atStartOfDayIn(tz)
-        .minus(
-            period = DateTimePeriod(
-                years = years
-            ),
-            timeZone = tz
-        )
-        .minus(
-            period = DateTimePeriod(
-                months = monthNumber - 1
-            ),
-            timeZone = tz
-        )
-        .minus(
-            period = DateTimePeriod(
-                days = this.month.number.monthLength(isLeapYear(this.year)) - this.dayOfMonth + 1
-            ),
-            timeZone = tz
-        )
+        .minus(period = DateTimePeriod(years = years), timeZone = tz)
         .toLocalDateTime(tz)
+        .minusMonths(monthNumber - 1)
+        .atBeginningOfMonth()
 }
 
 fun LocalDateTime.minusYearsAtEnd(years: Int): LocalDateTime {
     val tz = TimeZone.currentSystemDefault()
     return this.date
         .atStartOfDayIn(tz)
-        .minus(
-            period = DateTimePeriod(
-                years = years
-            ),
-            timeZone = tz
-        )
+        .minus(period = DateTimePeriod(years = years), timeZone = tz)
+        .plus(period = DateTimePeriod(months = 12 - monthNumber), timeZone = tz)
         .plus(
             period = DateTimePeriod(
-                months = 12 - monthNumber
-            ),
-            timeZone = tz
-        )
-        .plus(
-            period = DateTimePeriod(
-                days = this.month.number.monthLength(isLeapYear(this.year)) - this.dayOfMonth + 1
-            ),
-            timeZone = tz
-        ).plus(
-            period = DateTimePeriod(
-                hours = 23,
-                minutes = 59,
-                seconds = 59
-            ),
-            timeZone = tz
-        )
+                days = this.month.number.monthLength(isLeapYear(this.year)) - this.dayOfMonth
+            ), timeZone = tz
+        ).plus(period = DateTimePeriod(hours = 23, minutes = 59, seconds = 59), timeZone = tz)
         .toLocalDateTime(tz)
 }
 

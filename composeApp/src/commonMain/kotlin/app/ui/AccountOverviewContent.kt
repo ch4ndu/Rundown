@@ -2,6 +2,7 @@ package app.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -62,8 +63,8 @@ fun AccountOverview(
         state = listState,
         verticalArrangement = Arrangement.spacedBy(dimensions.listSpacing),
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = dimensions.contentMargin, end = dimensions.contentMargin)
+            .fillMaxSize(),
+        contentPadding = PaddingValues(dimensions.contentMargin)
     ) {
 
         item(key = "tabRowPadding") {
@@ -102,12 +103,12 @@ fun AccountOverview(
                         val firstEntry = chartData.expenseDataList.getOrNull(0)
                         val firstAmount = firstEntry?.expenseAmount ?: 0f
                         val startDateDisplay =
-                            dateRange.startDate.format(DateSerializer.balanceDisplayFormat)
+                            dateRange.startDate.format(DateSerializer.chartMonthYearFormat)
                         val lastEntry =
                             chartData.expenseDataList.getOrNull(chartData.expenseDataList.count() - 1)
                         val lastAmount = lastEntry?.expenseAmount ?: 0f
                         val endDateDisplay =
-                            dateRange.endDate.format(DateSerializer.balanceDisplayFormat)
+                            dateRange.endDate.format(DateSerializer.chartDayMonthYearFormat)
                         Row(
                             modifier = Modifier.padding(
                                 vertical = 5.dp,
@@ -166,7 +167,7 @@ fun AccountOverview(
                                 .fillMaxWidth()
                                 .aspectRatio(aspectRatio),
                             dataList = cashFlowData,
-                            mergeMode = MergeMode.Grouped,
+                            mergeMode = MergeMode.Stacked,
                             dateTimeFormatter = DateSerializer.chartMonthYearFormat
                         ) {
                         }

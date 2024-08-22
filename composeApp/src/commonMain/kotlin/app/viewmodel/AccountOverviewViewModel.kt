@@ -29,7 +29,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.lighthousegames.logging.logging
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AccountOverviewViewModel(
+open class AccountOverviewViewModel(
     private val transactionRepository: TransactionRepository,
     private val dispatcherProvider: DispatcherProvider,
     private val fireFlyTransactionDataDao: FireFlyTransactionDataDao,
@@ -74,7 +74,7 @@ class AccountOverviewViewModel(
         dateRangeFlow.value = dateRange
     }
 
-    val topTransactionsFlow = accountIdFlow.flatMapLatest { accountId ->
+    open val topTransactionsFlow = accountIdFlow.flatMapLatest { accountId ->
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
@@ -87,15 +87,16 @@ class AccountOverviewViewModel(
     }
     private val log = logging()
 
-    fun refreshRemoteData() {
+    open fun refreshRemoteData() {
         log.d { "refreshRemoteData" }
         loadState.value = LoadState.Loading
         viewModelScope.launch(dispatcherProvider.default) {
             syncWithServerUseCase.invoke()
+            loadState.value = LoadState.Idle
         }
     }
 
-    val tagsForAccountWithDate =
+    open val tagsForAccountWithDate =
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
@@ -120,7 +121,7 @@ class AccountOverviewViewModel(
                 }
             }.flowOn(dispatcherProvider.io)
 
-    val tagSummaryAccount = combine(
+    open val tagSummaryAccount = combine(
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent),
         accountIdFlow,
@@ -160,7 +161,7 @@ class AccountOverviewViewModel(
         tagTotalsMap
     }
 
-    val transactionsForActiveTag =
+    open val transactionsForActiveTag =
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
@@ -195,7 +196,7 @@ class AccountOverviewViewModel(
                 }
             }
 
-    private val categoriesForAccountWithDate =
+    open val categoriesForAccountWithDate =
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
@@ -213,7 +214,7 @@ class AccountOverviewViewModel(
                 }
             }
 
-    val categorySummaryAccount = combine(
+    open val categorySummaryAccount = combine(
         dateRangeFlow.distinctUntilChanged(areDateRangesEquivalent),
         accountIdFlow,
         categoriesForAccountWithDate
@@ -255,7 +256,7 @@ class AccountOverviewViewModel(
         categoriesTotalsMap
     }
 
-    val transactionsForActiveCategory =
+    open val transactionsForActiveCategory =
         dateRangeFlow.flatMapLatest { dateRange ->
             accountIdFlow.flatMapLatest { accountId ->
                 activeCategory.flatMapLatest { activeCategory ->
@@ -289,7 +290,7 @@ class AccountOverviewViewModel(
         }
 
 
-    fun getNewTransactionListForAccount(
+    open fun getNewTransactionListForAccount(
         accountType: String,
         accountId: Long,
         startDate: LocalDateTime,

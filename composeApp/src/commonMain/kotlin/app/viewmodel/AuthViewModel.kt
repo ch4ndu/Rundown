@@ -8,7 +8,7 @@ import domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(
+open class AuthViewModel(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val dispatcherProvider: DispatcherProvider,
@@ -16,7 +16,7 @@ class AuthViewModel(
 
     val uiState: MutableStateFlow<AuthScreenState> = MutableStateFlow(AuthScreenState.Idle)
 
-    fun checkAuth() {
+    open fun checkAuth() {
         uiState.value = AuthScreenState.InProgress
         viewModelScope.launch(dispatcherProvider.default) {
             if (userRepository.getCurrentActiveUserInfo(true)?.userEmail?.isNotEmpty() == true) {
@@ -27,7 +27,7 @@ class AuthViewModel(
         }
     }
 
-    fun tryAuth(
+    open fun tryAuth(
         url: String,
         token: String
     ) {

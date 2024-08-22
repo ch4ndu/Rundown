@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class SyncWithServerViewModel(
+open class SyncWithServerViewModel(
     private val syncWithServerUseCase: SyncWithServerUseCase,
     private val dispatcherProvider: DispatcherProvider,
     private val appPref: AppPref
@@ -17,7 +17,7 @@ class SyncWithServerViewModel(
 
     val syncStatus: MutableStateFlow<SyncState> = MutableStateFlow(SyncState.IDLE)
 
-    suspend fun startFirstSync() {
+    open suspend fun startFirstSync() {
         viewModelScope.launch(dispatcherProvider.default) {
             if (!appPref.isFirstSyncPending().first()) {
                 if (syncStatus.value == SyncState.IDLE) {

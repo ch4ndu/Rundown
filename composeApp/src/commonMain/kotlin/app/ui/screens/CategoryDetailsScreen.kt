@@ -4,6 +4,7 @@ package app.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +38,8 @@ private val log = logging()
 @Composable
 fun CategoryDetailsScreen(
     selectedCategory: String,
+    startDate: String,
+    endDate: String,
     categoryDetailsViewModel: CategoryDetailsViewModel = koinViewModel(),
     onBack: () -> Unit
 ) {
@@ -49,6 +52,7 @@ fun CategoryDetailsScreen(
     }
     LaunchedEffect(Unit) {
         categoryDetailsViewModel.setSelectedCategory(selectedCategory)
+        categoryDetailsViewModel.setDateRange(startDate, endDate)
     }
     val dimensions = FireflyAppTheme.dimensions
     val categorySpending =
@@ -78,8 +82,8 @@ fun CategoryDetailsScreen(
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(dimensions.listSpacing),
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = dimensions.contentMargin, end = dimensions.contentMargin)
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(all = dimensions.contentMargin)
             ) {
                 item(
                     key = "spendingBarChart",

@@ -65,7 +65,9 @@ sealed class Route() {
     data object Categories : Route() {
 
         @Serializable
-        data class CategoryDetails(val category: String)
+        data class CategoryDetails(val category: String,
+                                   val startDate: String,
+                                   val endDate: String,)
     }
 
     @Serializable
