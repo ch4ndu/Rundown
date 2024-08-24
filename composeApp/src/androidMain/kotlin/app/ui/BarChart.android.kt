@@ -71,7 +71,7 @@ actual fun BarChart(
             MergeMode.Stacked -> ColumnCartesianLayer.MergeMode.Stacked
         }
     }
-    log.d { "chandu-spendingDataList size: ${dataList.size}" }
+    log.d { "spendingDataList size: ${dataList.size}" }
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val isSpendingData = remember(dataList) {
         mutableStateOf(true)
@@ -126,7 +126,7 @@ actual fun BarChart(
     LaunchedEffect(dataList) {
         if (dataList.isNotEmpty()) {
             withContext(Dispatchers.Default) {
-                log.d { "chandu-running transaction" }
+                log.d { "running transaction" }
                 modelProducer.tryRunTransaction {
                     columnSeries {
                         if (dataList[0] is ExpenseIncomeData) {

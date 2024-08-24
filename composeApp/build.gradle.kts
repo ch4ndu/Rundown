@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -209,7 +210,11 @@ kotlin.sourceSets.all {
 }
 
 composeCompiler {
-    enableStrongSkippingMode = true
+    featureFlags = setOf(
+        ComposeFeatureFlag.IntrinsicRemember,
+        ComposeFeatureFlag.OptimizeNonSkippingGroups,
+        ComposeFeatureFlag.StrongSkipping
+    )
 
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
     stabilityConfigurationFile = project.file("compose_compiler_config.txt")

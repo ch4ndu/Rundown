@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import org.lighthousegames.logging.logging
 
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
-abstract class AccountsViewModel(
+open class AccountsViewModel(
     private val accountRepository: AccountRepository,
     private val dispatcherProvider: DispatcherProvider,
     private val syncWithServerUseCase: SyncWithServerUseCase,

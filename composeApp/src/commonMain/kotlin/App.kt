@@ -52,11 +52,20 @@ fun App() {
                 }
             }
             if (!authComplete) {
-                AuthScreen(onLoginClick = onLoginClick, onAuthSuccess = {
+                AuthScreen(
+                    authViewModel = authViewModel,
+                    onLoginClick = onLoginClick,
+                    onAuthSuccess = {
                     unloadKoinModules(networkModule)
                     loadKoinModules(networkModule)
                     authComplete = true
-                })
+                    },
+                    runDemoClick = {
+                        syncNeeded = false
+                        authComplete = true
+                        authViewModel.runDemo()
+                    }
+                )
             } else if (syncNeeded) {
                 FirstSyncScreen {
                     syncNeeded = false

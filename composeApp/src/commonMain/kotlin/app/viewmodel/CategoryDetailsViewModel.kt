@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.datetime.LocalDateTime
 
-class CategoryDetailsViewModel(
+open class CategoryDetailsViewModel(
     private val transactionRepository: TransactionRepository,
     getCategorySpendingUseCase: GetCategorySpendingUseCase,
     dispatcherProvider: DispatcherProvider,
@@ -63,7 +63,7 @@ class CategoryDetailsViewModel(
     }.distinctUntilChanged()
         .flowOn(dispatcherProvider.io)
 
-    val transactionsForCategory =
+    open val transactionsForCategory =
         spendingDateSelected.filterNotNull().flatMapLatest { spendingData ->
             val startDate = spendingData.date.atBeginningOfMonth()
             val endDate = startDate.withEndOfMonthAtEndOfDay()

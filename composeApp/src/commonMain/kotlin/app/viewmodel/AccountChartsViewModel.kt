@@ -14,12 +14,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AccountChartsViewModel(
+open class AccountChartsViewModel(
     private val dispatcherProvider: DispatcherProvider,
     getBalanceChartDataUseCase: GetBalanceChartDataUseCase,
     private val getAccountSpendingUseCase: GetAccountSpendingUseCase,
@@ -58,14 +59,14 @@ class AccountChartsViewModel(
     }
 
     // LineChart data
-    val chartDataFlow = dateRangeFlow.flatMapLatest { dateRange ->
+    open val chartDataFlow = dateRangeFlow.flatMapLatest { dateRange ->
         accountNameFlow.flatMapLatest { accountName ->
             getBalanceChartDataUseCase.accountChartData(
                 dateRange = dateRange,
                 accountName = accountName,
             )
         }
-    }
+    }.flowOn(dispatcherProvider.default)
 
     val lineDataSetFlowVico =
         chartDataFlow.flatMapLatest { chartData ->
@@ -78,11 +79,11 @@ class AccountChartsViewModel(
 //        flowOf(VicoLineBottomAxisFormatter(entries))
 //    }
 
-    val spendingDataFlow = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
+    open val spendingDataFlow = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
         getOverallSpendingUseCase.getOverallSpendingForAccountByMonth(dateRange, accountId.toLong())
-    }
+    }.flowOn(dispatcherProvider.default)
 
-    val cashFlowData = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
+    open val cashFlowData = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
         getCashFlowUseCase.getAccountCashFlowForDateRange(dateRange, accountId.toLong())
-    }
+    }.flowOn(dispatcherProvider.default)
 }

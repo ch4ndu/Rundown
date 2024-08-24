@@ -131,14 +131,14 @@ fun FilterScreen(
                                 )
                         )
                         log.d {
-                            "chandu-dateRange:start-${
+                            "dateRange:start-${
                                 selectedDateRange.startDate.format(
                                     DateSerializer.sendToApiFormat
                                 )
                             }"
                         }
                         log.d {
-                            "chandu-dateRange:end-${
+                            "dateRange:end-${
                                 selectedDateRange.endDate.format(
                                     DateSerializer.sendToApiFormat
                                 )

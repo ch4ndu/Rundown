@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class HomeViewModel(
+open class HomeViewModel(
     private val getOverallSpendingUseCase: GetOverallSpendingUseCase,
     private val transactionRepository: TransactionRepository,
     private val accountRepository: AccountRepository,
@@ -29,19 +29,6 @@ class HomeViewModel(
 ) : BaseViewModel() {
 
     private val dailyExpenseDataSelected = MutableStateFlow<ExpenseData?>(null)
-
-    val dailySpendingFlow =
-        getOverallSpendingUseCase.getOverallSpendingByDay(currentDate(), 30)
-            .toStateFlow(initial = emptyList())
-
-    val cashFlowDetails = getCashFlowUseCase.getCashFlowForDateRange(
-        DateRange(
-            currentDate().minusMonths(12).atBeginningOfMonth(),
-            currentDate().withEndOfMonthAtEndOfDay()
-        )
-    ).toStateFlow(
-        initial = emptyList()
-    )
 
     fun updateSelectedExpenseData(expenseData: ExpenseData) {
         dailyExpenseDataSelected.value = expenseData
@@ -57,7 +44,18 @@ class HomeViewModel(
             )
         }.flowOn(dispatcherProvider.io).toStateFlow(initial = null)
 
-    val netWorthLineDataSetFlow =
+    open val dailySpendingFlow =
+        getOverallSpendingUseCase.getOverallSpendingByDay(currentDate(), 30)
+            .toStateFlow(initial = emptyList())
+
+    open val cashFlowDetails = getCashFlowUseCase.getCashFlowForDateRange(
+        DateRange(
+            currentDate().minusMonths(12).atBeginningOfMonth(),
+            currentDate().withEndOfMonthAtEndOfDay()
+        )
+    ).toStateFlow(initial = emptyList())
+
+    open val netWorthLineDataSetFlow =
         netWorthChartDataFlow.flatMapLatest { groupedExpenseData ->
             flowOf(groupedExpenseData?.expenseDataList)
         }.toStateFlow(initial = null)

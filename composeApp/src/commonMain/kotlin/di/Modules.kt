@@ -52,6 +52,8 @@ expect val platformModule: Module
 
 expect val viewModelModule: Module
 
+expect val mockViewModelModule: Module
+
 val networkModule = module {
     factory<UserInfo> {
         runBlocking {

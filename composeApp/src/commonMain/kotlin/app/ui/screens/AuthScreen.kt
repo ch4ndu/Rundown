@@ -25,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.unit.dp
 import app.theme.FireflyAppTheme
 import app.viewmodel.AuthScreenState
@@ -36,9 +35,10 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
 fun AuthScreen(
-    authViewModel: AuthViewModel = koinViewModel(),
+    authViewModel: AuthViewModel,
     onAuthSuccess: () -> Unit,
     onLoginClick: (String, String) -> Unit,
+    runDemoClick: () -> Unit,
 ) {
     val uiState = authViewModel.uiState.collectAsState()
     val dimensions = FireflyAppTheme.dimensions
@@ -88,7 +88,21 @@ fun AuthScreen(
                     Text(text = "Login")
                 }
                 Spacer(modifier = Modifier.height(64.dp))
-                Text(text = "uiState:${uiState.value}")
+                Text(
+                    text = "uiState:${uiState.value}",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                ElevatedButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    colors = ButtonDefaults.elevatedButtonColors()
+                        .copy(
+                            containerColor = FireflyAppTheme.colorScheme.secondary,
+                            contentColor = androidx.compose.ui.graphics.Color.White
+                        ),
+                    onClick = runDemoClick
+                ) {
+                    Text(text = "Run Demo")
+                }
             }
         } else if (uiState.value is AuthScreenState.InProgress) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -109,17 +123,17 @@ fun AuthScreen(
     }
 }
 
-@Preview
-@Composable
-fun AuthPreview() {
-    FireflyAppTheme(darkTheme = false) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = FireflyAppTheme.colorScheme.background
-        ) {
-            AuthScreen(onAuthSuccess = {}) { _, _ ->
-
-            }
-        }
-    }
-}
+//@Preview
+//@Composable
+//fun AuthPreview() {
+//    FireflyAppTheme(darkTheme = false) {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = FireflyAppTheme.colorScheme.background
+//        ) {
+//            AuthScreen(
+//                onAuthSuccess = {}, runDemoClick = {}, onLoginClick = { _, _ -> }
+//            )
+//        }
+//    }
+//}

@@ -15,6 +15,7 @@ import data.PreferenceStore
 import data.database.AppDatabase
 import data.database.AppDatabaseBuilder
 import org.koin.compose.viewmodel.dsl.viewModel
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val platformModule = module {
@@ -37,3 +38,5 @@ actual val viewModelModule = module {
     factory { CategoriesOverviewViewModel(get(), get(), get(), get()) }
     factory { CategoryDetailsViewModel(get(), get(), get(), get(), get()) }
 }
+actual val mockViewModelModule: Module
+    get() = viewModelModule

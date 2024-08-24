@@ -5,7 +5,9 @@ import app.viewmodel.AccountsViewModel
 import data.AppPref
 import data.database.model.accounts.AccountAttributes
 import data.database.model.accounts.AccountData
+import data.database.serializers.DateSerializer
 import di.DispatcherProvider
+import domain.currentDate
 import domain.repository.AccountRepository
 import domain.usecase.SyncWithServerUseCase
 import kotlinx.coroutines.delay
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.datetime.format
 
 class MockAccountsViewModel(
     private val accountRepository: AccountRepository,
@@ -22,7 +25,6 @@ class MockAccountsViewModel(
 ) : AccountsViewModel(accountRepository, dispatcherProvider, syncWithServerUseCase, appPref) {
 
     override val accountList = flow {
-        delay(5_000)
         emit(
             listOf(
                 AccountData(
@@ -77,7 +79,7 @@ class MockAccountsViewModel(
         )
     }.flowOn(dispatcherProvider.default)
 
-    override val lastSyncedAt = flow<String> { "Unknown" }
+    override val lastSyncedAt = flow<String> { currentDate().format(DateSerializer.displayFormat) }
         .flowOn(dispatcherProvider.io)
         .shareIn(
             scope = viewModelScope,

@@ -19,7 +19,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.toLocalDateTime
 import org.lighthousegames.logging.logging
 
-class AccountCashFlowDetailsViewModel(
+open class AccountCashFlowDetailsViewModel(
     private val transactionRepository: TransactionRepository,
     private val getCashFlowUseCase: GetCashFlowUseCase,
     private val dispatcherProvider: DispatcherProvider,
@@ -54,11 +54,11 @@ class AccountCashFlowDetailsViewModel(
 //            LocalDateTime.parse(it, DateSerializer.isoFormat)
 //        }
 
-    private val dateRangeFlow = combine(startDateFlow, endDateFlow) { startDate, endDate ->
+    val dateRangeFlow = combine(startDateFlow, endDateFlow) { startDate, endDate ->
         DateRange(startDate, endDate)
     }
 
-    val selectedTypeFlow = MutableStateFlow(ExpenseType.EXPENSE)
+    private val selectedTypeFlow = MutableStateFlow(ExpenseType.EXPENSE)
 
     private val selectedMonthFlow =
         MutableStateFlow(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
@@ -67,13 +67,13 @@ class AccountCashFlowDetailsViewModel(
         selectedMonthFlow.value = dateTime
     }
 
-    val cashFlowData = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
-        log.d { "chandu:startDate:${dateRange.startDate.format(DateSerializer.chartDayMonthYearFormat)}" }
-        log.d { "chandu:endDate:${dateRange.endDate.format(DateSerializer.chartDayMonthYearFormat)}" }
+    open val cashFlowData = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
+        log.d { "startDate:${dateRange.startDate.format(DateSerializer.chartDayMonthYearFormat)}" }
+        log.d { "endDate:${dateRange.endDate.format(DateSerializer.chartDayMonthYearFormat)}" }
         getCashFlowUseCase.getAccountCashFlowForDateRange(dateRange, accountId)
     }
 
-    val transactionsFlow = combine(
+    open val transactionsFlow = combine(
         selectedTypeFlow,
         selectedMonthFlow,
         accountIdFlow

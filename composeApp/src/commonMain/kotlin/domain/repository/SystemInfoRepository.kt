@@ -42,13 +42,11 @@ class SystemInfoRepository(
             val systemInfoModel = systemInfoService.getSystemInfo().body()
             val systemData = systemInfoModel?.systemData
             return if (systemData != null) {
-//                Log.d("chandu", "repo systemData:$systemData")
                 appPref.setSemVersion(systemData.version)
                 appPref.setRemoteApiVersion(systemData.api_version)
                 appPref.setUserOs(systemData.os)
                 systemData
             } else {
-//                Log.d("chandu", "repo systemData null")
                 null
             }
         } catch (exception: Exception) {
@@ -62,15 +60,11 @@ class SystemInfoRepository(
             val systemInfoModel = response.body()
             val systemData = systemInfoModel?.systemData
             return if (systemData != null) {
-//                Log.d("chandu", "repo systemData:$systemData")
                 appPref.setSemVersion(systemData.version)
                 appPref.setRemoteApiVersion(systemData.api_version)
                 appPref.setUserOs(systemData.os)
                 true
             } else {
-//                Log.w("chandu", "repo systemData null")
-//                Log.w("chandu", "code: ${response.code}")
-//                Log.w("chandu", "message: ${response.message}")
                 if (response.code == 401) {
 
                 }

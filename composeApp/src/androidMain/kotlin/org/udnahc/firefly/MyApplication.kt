@@ -19,7 +19,7 @@ class MyApplication : Application() {
         super.onCreate()
         initKoin {
             androidContext(this@MyApplication)
-            modules(sharedModule, platformModule, dispatcherProvider, networkModule, viewModelModule)
+            modules(dispatcherProvider, sharedModule, platformModule, networkModule, viewModelModule)
             workManagerFactory()
         }
 

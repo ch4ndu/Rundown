@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class)
 
 package app.viewmodel
 
@@ -16,19 +16,19 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 
-class DailySpendingDetailsViewModel(
-    private val getOverallSpendingUseCase: GetOverallSpendingUseCase,
+open class DailySpendingDetailsViewModel(
+    getOverallSpendingUseCase: GetOverallSpendingUseCase,
     private val transactionRepository: TransactionRepository,
-    private val accountRepository: AccountRepository,
-    private val dispatcherProvider: DispatcherProvider
+    accountRepository: AccountRepository,
+    dispatcherProvider: DispatcherProvider
 ) : BaseViewModel() {
 
-    private val dailyExpenseDataSelected = MutableStateFlow<ExpenseData?>(null)
+    open val dailyExpenseDataSelected = MutableStateFlow<ExpenseData?>(null)
 
-    val dailySpendingFlow =
+    open val dailySpendingFlow =
         getOverallSpendingUseCase.getOverallSpendingByDay(currentDate(), 30)
 
-    val transactionsForSelectedExpenseData =
+    open val transactionsForSelectedExpenseData =
         accountRepository.getAssetAccountListFlow().flatMapLatest { accountList ->
             dailyExpenseDataSelected.filterNotNull().flatMapLatest { expenseData ->
                 val start = expenseData.date.withStartOfDay()

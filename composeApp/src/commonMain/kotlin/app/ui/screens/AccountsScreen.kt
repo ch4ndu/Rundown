@@ -75,9 +75,10 @@ fun AccountsScreen(
             when (isConnectedToServer) {
                 HealthCheck.Connected -> Color.Green
                 HealthCheck.Failed,
-                HealthCheck.ExpiredToken -> Color.Red
+                HealthCheck.ExpiredToken,
+                HealthCheck.Unknown -> Color.Red
 
-                else -> null
+                null -> null
             }
         )
     }

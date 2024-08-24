@@ -19,7 +19,7 @@ class MockAuthViewModel(
         uiState.value = AuthScreenState.InProgress
         viewModelScope.launch(dispatcherProvider.default) {
             delay(2_000)
-            uiState.value = AuthScreenState.Authenticated
+            uiState.value = AuthScreenState.Idle
         }
     }
 
@@ -28,7 +28,8 @@ class MockAuthViewModel(
         token: String
     ) {
         viewModelScope.launch(dispatcherProvider.default) {
-            delay(5_000)
+            uiState.value = AuthScreenState.InProgress
+            delay(2_000)
             uiState.value = AuthScreenState.Authenticated
         }
     }

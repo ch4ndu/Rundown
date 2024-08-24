@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 
-class BudgetListOverviewViewModel(
+open class BudgetListOverviewViewModel(
     private val budgetRepository: BudgetRepository
 ) : BaseViewModel() {
 
@@ -27,7 +27,7 @@ class BudgetListOverviewViewModel(
             )
         )
 
-    val budgetListOverviewFlow =
+    open val budgetListOverviewFlow =
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->

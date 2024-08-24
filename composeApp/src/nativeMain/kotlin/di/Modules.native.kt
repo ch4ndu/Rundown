@@ -11,10 +11,22 @@ import app.viewmodel.CategoryDetailsViewModel
 import app.viewmodel.DailySpendingDetailsViewModel
 import app.viewmodel.HomeViewModel
 import app.viewmodel.SyncWithServerViewModel
+import app.viewmodel.mock.MockAccountCashFlowDetailsViewModel
+import app.viewmodel.mock.MockAccountChartsViewModel
+import app.viewmodel.mock.MockAccountOverviewViewModel
+import app.viewmodel.mock.MockAccountsViewModel
+import app.viewmodel.mock.MockAuthViewModel
+import app.viewmodel.mock.MockBudgetListOverviewViewModel
+import app.viewmodel.mock.MockCategoriesOverviewViewModel
+import app.viewmodel.mock.MockCategoryDetailsViewModel
+import app.viewmodel.mock.MockDailySpendingDetailsViewModel
+import app.viewmodel.mock.MockHomeViewModel
+import app.viewmodel.mock.MockSyncWithServerViewModel
 import data.PreferenceStore
 import data.database.AppDatabase
 import data.database.AppDatabaseBuilder
-import org.koin.compose.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val platformModule = module {
@@ -24,7 +36,8 @@ actual val platformModule = module {
     }
     single { PreferenceStore().getDataStore() }
 }
-actual val viewModelModule = module {
+
+val serverModules = module {
     factory { AuthViewModel(get(), get(), get()) }
     factory { AccountsViewModel(get(), get(), get(), get()) }
     factory { SyncWithServerViewModel(get(), get(), get()) }
@@ -37,3 +50,21 @@ actual val viewModelModule = module {
     factory { CategoriesOverviewViewModel(get(), get(), get(), get()) }
     factory { CategoryDetailsViewModel(get(), get(), get(), get(), get()) }
 }
+
+val mockModules = module {
+    factoryOf(::MockAuthViewModel).bind<AuthViewModel>()
+    factoryOf(::MockAccountsViewModel).bind<AccountsViewModel>()
+    factoryOf(::MockSyncWithServerViewModel).bind<SyncWithServerViewModel>()
+    factoryOf(::MockAccountOverviewViewModel).bind<AccountOverviewViewModel>()
+    factoryOf(::MockAccountChartsViewModel).bind<AccountChartsViewModel>()
+    factoryOf(::MockAccountCashFlowDetailsViewModel).bind<AccountCashFlowDetailsViewModel>()
+    factoryOf(::MockHomeViewModel).bind<HomeViewModel>()
+    factoryOf(::MockDailySpendingDetailsViewModel).bind<DailySpendingDetailsViewModel>()
+    factoryOf(::MockBudgetListOverviewViewModel).bind<BudgetListOverviewViewModel>()
+    factoryOf(::MockCategoriesOverviewViewModel).bind<CategoriesOverviewViewModel>()
+    factoryOf(::MockCategoryDetailsViewModel).bind<CategoryDetailsViewModel>()
+}
+actual val viewModelModule = mockModules
+
+//actual val viewModelModule = serverModules
+actual val mockViewModelModule = mockModules

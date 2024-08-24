@@ -58,7 +58,7 @@ open class CategoriesOverviewViewModel(
                     }.distinctUntilChanged()
             }
 
-    val allCategoriesSpending: Flow<List<CategorySpending>> =
+    open val allCategoriesSpending: Flow<List<CategorySpending>> =
         dateRangeFlow.flatMapLatest { range ->
             categoriesWithDate.flatMapLatest { categories ->
                 flow {

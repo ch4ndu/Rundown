@@ -2,11 +2,16 @@ package app.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import di.DispatcherProvider
+import di.mockViewModelModule
+import di.viewModelModule
 import domain.AuthState
 import domain.repository.AuthRepository
 import domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
+import org.lighthousegames.logging.logging
 
 open class AuthViewModel(
     private val userRepository: UserRepository,
@@ -14,15 +19,20 @@ open class AuthViewModel(
     private val dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel() {
 
+    private val log = logging()
+
     val uiState: MutableStateFlow<AuthScreenState> = MutableStateFlow(AuthScreenState.Idle)
 
     open fun checkAuth() {
+        log.d { "checkAuth" }
         uiState.value = AuthScreenState.InProgress
         viewModelScope.launch(dispatcherProvider.default) {
             if (userRepository.getCurrentActiveUserInfo(true)?.userEmail?.isNotEmpty() == true) {
                 uiState.value = AuthScreenState.Authenticated
+                log.d { "checkAuth:Authenticated" }
             } else {
                 uiState.value = AuthScreenState.Idle
+                log.d { "checkAuth:Idle" }
             }
         }
     }
@@ -46,6 +56,7 @@ open class AuthViewModel(
                 return@launch
             }
 
+            uiState.value = AuthScreenState.InProgress
             when (val authState = authRepository.tryAuth(url, token)) {
                 is AuthState.Authenticated -> {
 //                    unloadKoinModules(networkModule)
@@ -56,6 +67,12 @@ open class AuthViewModel(
                 is AuthState.Error -> uiState.value = AuthScreenState.Error(authState.reason)
             }
         }
+    }
+
+    fun runDemo() {
+        unloadKoinModules(viewModelModule)
+        loadKoinModules(mockViewModelModule)
+        uiState.value = AuthScreenState.Authenticated
     }
 }
 

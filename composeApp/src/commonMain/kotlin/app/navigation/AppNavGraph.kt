@@ -148,8 +148,8 @@ private fun NavGraphBuilder.addAccountsScreen(navController: NavHostController) 
                     navController.popBackStack(route = Route.Accounts, inclusive = false)
                 },
                 onAccountCashFlowDetailsClick = { dateRange ->
-                    log.d { "chandu:startDate:${dateRange.startDate.format(DateSerializer.isoFormat)}" }
-                    log.d { "chandu:endDate:${dateRange.endDate.format(DateSerializer.isoFormat)}" }
+                    log.d { "startDate:${dateRange.startDate.format(DateSerializer.isoFormat)}" }
+                    log.d { "endDate:${dateRange.endDate.format(DateSerializer.isoFormat)}" }
                     navController.navigate(
                         Route.Accounts.AccountCashFlowDetails(
                             accountId = accountOverview.accountId,

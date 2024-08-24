@@ -16,13 +16,14 @@ atomicfu = "0.23.2"
 compose-plugin = "1.6.11"
 compose = "1.6.11"
 dataStoreVersion = "1.1.1"
-kotlin = "2.0.0"
+kotlin_version = "2.0.20"
 kotlinx-coroutines = "1.8.1"
 kotlin_serialization_version = '1.7.0'
 kotlinxDatetime = "0.6.0"
-ksp = "2.0.0-1.0.21"
+ksp = "2.0.20-1.0.24"
 ktorVersion = "2.3.12"
-ktorfitVersion = "2.0.0"
+ktorfitVersion = "2.0.1"
+ktorfit_compiler_version = "2.0.1-2.0.20"
 #skie = "0.8.1"
 sqlite = "2.5.0-alpha05"
 junit = "4.13.2"
@@ -43,7 +44,7 @@ work_version = "2.9.0"
 [libraries]
 androidGradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 composeGradle = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose" }
-kotlinGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_version" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
@@ -54,7 +55,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewModel" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewModel" }
 
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin_version" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -79,7 +80,7 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = 
 #compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 #compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin_version" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core-iosarm64 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-iossimulatorarm64", version.ref = "kotlinx-coroutines" }
@@ -98,7 +99,9 @@ ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktorVer
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorVersion" }
 
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin_serialization_version" }
+
 ktorfit-lib = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfitVersion" }
+#ktorfit-compiler = { module = "de.jensklingenberg.ktorfit:compiler-plugin", version.ref = "ktorfit_compiler_version" }
 ktorfit-converters-response = { module = "de.jensklingenberg.ktorfit:ktorfit-converters-response", version.ref = "ktorfitVersion" }
 ktorfit-converters-call = { module = "de.jensklingenberg.ktorfit:ktorfit-converters-call", version.ref = "ktorfitVersion" }
 
@@ -128,11 +131,11 @@ androidx-koin-work = { module = "io.insert-koin:koin-androidx-workmanager", vers
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.0.0" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin_version" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_version" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "androidx-room" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfitVersion" }
