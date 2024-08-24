@@ -323,7 +323,7 @@ object MockData {
         ),
         ExpenseIncomeData(
             expenseAmount = 30f,
-            incomeAmount = 1000f,
+            incomeAmount = 500f,
             date = currentDate().minusMonths(10)
         ),
         ExpenseIncomeData(

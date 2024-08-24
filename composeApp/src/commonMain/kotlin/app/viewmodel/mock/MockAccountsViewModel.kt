@@ -10,7 +10,6 @@ import di.DispatcherProvider
 import domain.currentDate
 import domain.repository.AccountRepository
 import domain.usecase.SyncWithServerUseCase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -18,9 +17,9 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.datetime.format
 
 class MockAccountsViewModel(
-    private val accountRepository: AccountRepository,
-    private val dispatcherProvider: DispatcherProvider,
-    private val syncWithServerUseCase: SyncWithServerUseCase,
+    accountRepository: AccountRepository,
+    dispatcherProvider: DispatcherProvider,
+    syncWithServerUseCase: SyncWithServerUseCase,
     appPref: AppPref
 ) : AccountsViewModel(accountRepository, dispatcherProvider, syncWithServerUseCase, appPref) {
 
@@ -79,7 +78,8 @@ class MockAccountsViewModel(
         )
     }.flowOn(dispatcherProvider.default)
 
-    override val lastSyncedAt = flow<String> { currentDate().format(DateSerializer.displayFormat) }
+    override val lastSyncedAt =
+        flow { emit(currentDate().format(DateSerializer.displayFormat)) }
         .flowOn(dispatcherProvider.io)
         .shareIn(
             scope = viewModelScope,

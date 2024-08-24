@@ -63,6 +63,7 @@ struct BarChartView: View {
             .zIndex(0)
             
             if (barData.id == observableBarData.selectedBarData?.id) {
+                let expensePadding = incomeAmount > 0 ? CGFloat(0) : CGFloat(5)
                 RuleMark(x: .value("Date", dateString))
                     .zIndex(0)
                     .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
@@ -74,17 +75,23 @@ struct BarChartView: View {
                     VStack{
                         Text("\(dateString) ")
                             .font(.caption)
-                            .padding(0)
+                            .padding(.top, 5)
+                            .padding(.leading, 5)
+                            .padding(.trailing, 5)
                             .background(Color.clear)
                         Text("Expenses: $\(expenseAmount, specifier: "%.1f") ")
                             .font(.caption)
                             .foregroundColor(.red)
-                            .padding(0)
+                            .padding(.leading, 5)
+                            .padding(.trailing, 5)
+                            .padding(.bottom, expensePadding)
                             .background(Color.clear)
                         if (incomeAmount > 0) {
                             Text("Income: $\(incomeAmount, specifier: "%.1f") ")
                                 .font(.caption)
-                                .padding(0)
+                                .padding(.leading, 5)
+                                .padding(.trailing, 5)
+                                .padding(.bottom, 5)
                                 .foregroundColor(.green)
                                 .background(Color.clear)
                             
