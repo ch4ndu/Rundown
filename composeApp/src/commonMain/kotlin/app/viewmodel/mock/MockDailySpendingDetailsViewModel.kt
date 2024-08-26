@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package app.viewmodel.mock
 
 import app.viewmodel.DailySpendingDetailsViewModel
@@ -7,6 +9,7 @@ import domain.model.ExpenseData
 import domain.repository.AccountRepository
 import domain.repository.TransactionRepository
 import domain.usecase.GetOverallSpendingUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest

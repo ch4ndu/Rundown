@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import app.theme.FireflyAppTheme
 import fireflycomposemultiplatform.composeapp.generated.resources.Res
 import fireflycomposemultiplatform.composeapp.generated.resources.ic_arrow_right
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -22,13 +23,16 @@ fun DetailsIconButton(
             modifier = Modifier.align(Alignment.TopEnd),
             onClick = { onClick.invoke() }
         ) {
-            Image(
-                painter = painterResource(resource = Res.drawable.ic_arrow_right),
-                contentDescription = "Details",
-                colorFilter = ColorFilter.tint(FireflyAppTheme.colorScheme.onSecondaryContainer)
-            )
+            SkippableImage(resource = Res.drawable.ic_arrow_right)
         }
-
     }
+}
 
+@Composable
+fun SkippableImage(resource: DrawableResource) {
+    Image(
+        painter = painterResource(resource = resource),
+        contentDescription = "Details",
+        colorFilter = ColorFilter.tint(FireflyAppTheme.colorScheme.onSecondaryContainer)
+    )
 }

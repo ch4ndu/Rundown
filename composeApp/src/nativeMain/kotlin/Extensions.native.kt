@@ -7,5 +7,5 @@ actual fun Double.getDisplayWithCurrency(currencySymbol: String): String {
     formatter.minimumFractionDigits = 0u
     formatter.maximumFractionDigits = 2u
     formatter.numberStyle = 1u //Decimal
-    return formatter.stringFromNumber(NSNumber(this))!!
+    return """$currencySymbol${formatter.stringFromNumber(NSNumber(this))!!}"""
 }

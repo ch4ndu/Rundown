@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 open class HomeViewModel(
@@ -48,12 +49,22 @@ open class HomeViewModel(
         getOverallSpendingUseCase.getOverallSpendingByDay(currentDate(), 30)
             .toStateFlow(initial = emptyList())
 
+    val dailySpendingAverage = dailySpendingFlow.map { spendingData ->
+        spendingData.map { it.expenseAmount }.average()
+    }
+
     open val cashFlowDetails = getCashFlowUseCase.getCashFlowForDateRange(
         DateRange(
             currentDate().minusMonths(12).atBeginningOfMonth(),
             currentDate().withEndOfMonthAtEndOfDay()
         )
     ).toStateFlow(initial = emptyList())
+
+    val cashFlowAverages = cashFlowDetails.map { cashFlowdata ->
+        val expenseAverage = cashFlowdata.map { it.expenseAmount }.average()
+        val incomeAverage = cashFlowdata.map { it.incomeAmount }.average()
+        hashMapOf(Pair("expense", expenseAverage), Pair("income", incomeAverage))
+    }
 
     open val netWorthLineDataSetFlow =
         netWorthChartDataFlow.flatMapLatest { groupedExpenseData ->

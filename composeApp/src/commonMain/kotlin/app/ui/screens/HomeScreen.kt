@@ -5,6 +5,7 @@ package app.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.model.MergeMode
 import app.theme.FireflyAppTheme
+import app.theme.WalletLightGreen
+import app.theme.WalletOrange2
 import app.ui.AppBar
 import app.ui.BarChart
 import app.ui.DetailsIconButton
@@ -34,6 +37,7 @@ import app.ui.isLargeScreen
 import app.viewmodel.HomeViewModel
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseData
+import getDisplayWithCurrency
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.lighthousegames.logging.logging
@@ -55,8 +59,12 @@ fun HomeScreen(
 
     val dailySpending =
         homeViewModel.dailySpendingFlow.collectAsStateWithLifecycle(initialValue = emptyList())
+    val dailySpendingAverage =
+        homeViewModel.dailySpendingAverage.collectAsStateWithLifecycle(initialValue = null)
     val cashFlowDetails =
         homeViewModel.cashFlowDetails.collectAsStateWithLifecycle(initialValue = emptyList())
+    val cashFlowAverages =
+        homeViewModel.cashFlowAverages.collectAsStateWithLifecycle(initialValue = hashMapOf())
 
     val netWorthChartData = homeViewModel.netWorthChartDataFlow.collectAsStateWithLifecycle(
         initialValue = null
@@ -93,11 +101,12 @@ fun HomeScreen(
                         }
                         Column {
                             Text(
-                                text = "Daily Spending Overview",
+                                text = "Daily Spending Overview \nLast 30 days",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(all = 6.dp),
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                maxLines = 2
                             )
                             BarChart(
                                 modifier = Modifier
@@ -110,14 +119,30 @@ fun HomeScreen(
                                     homeViewModel.updateSelectedExpenseData(it)
                                 }
                             }
+                            if (dailySpendingAverage.value != null) {
+                                Row(modifier = Modifier.padding(all = 3.dp)) {
+                                    Text(
+                                        text = "Average Spending per day: ",
+                                        textAlign = TextAlign.Center,
+                                        style = FireflyAppTheme.typography.titleMedium
+                                    )
+                                    val expenseText = remember(dailySpendingAverage.value) {
+                                        (dailySpendingAverage.value
+                                            ?: 0.0).getDisplayWithCurrency("$")
+                                    }
+                                    Text(
+                                        text = expenseText,
+                                        style = FireflyAppTheme.typography.titleLarge.copy(
+                                            color = WalletOrange2
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
                 }
                 item {
                     ThemedBox {
-//                        DetailsIconButton(boxScope = this) {
-//
-//                        }
                         Column {
                             Text(
                                 text = "CashFlow Overview",
@@ -134,6 +159,42 @@ fun HomeScreen(
                                 mergeMode = MergeMode.Stacked,
                                 dateTimeFormatter = DateSerializer.chartMonthYearFormat
                             ) {
+                            }
+                            if (cashFlowAverages.value["expense"] != null) {
+                                Row(modifier = Modifier.padding(all = 3.dp)) {
+                                    Text(
+                                        text = "Average Expenses: ",
+                                        textAlign = TextAlign.Center,
+                                        style = FireflyAppTheme.typography.titleMedium
+                                    )
+                                    val expenseText = remember(cashFlowAverages.value) {
+                                        (cashFlowAverages.value["expense"]
+                                            ?: 0.0).getDisplayWithCurrency("$")
+                                    }
+                                    Text(
+                                        text = expenseText,
+                                        style = FireflyAppTheme.typography.titleLarge.copy(
+                                            color = WalletOrange2
+                                        )
+                                    )
+                                }
+                                Row(modifier = Modifier.padding(all = 3.dp)) {
+                                    Text(
+                                        text = "Average Income: ",
+                                        textAlign = TextAlign.Center,
+                                        style = FireflyAppTheme.typography.titleMedium
+                                    )
+                                    val incomeText = remember(cashFlowAverages.value) {
+                                        (cashFlowAverages.value["income"]
+                                            ?: 0.0).getDisplayWithCurrency("$")
+                                    }
+                                    Text(
+                                        text = incomeText,
+                                        style = FireflyAppTheme.typography.titleLarge.copy(
+                                            color = WalletLightGreen
+                                        )
+                                    )
+                                }
                             }
                         }
                     }

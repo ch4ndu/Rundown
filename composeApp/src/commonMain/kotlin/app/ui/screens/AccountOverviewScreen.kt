@@ -131,7 +131,7 @@ fun AccountOverviewScreen(
         accountOverviewViewModel.activeTag.value = tag
     }
 
-    var selectedDateRange = rememberSaveable(saver = Savers.DateRange) {
+    val selectedDateRange = rememberSaveable(saver = Savers.DateRange) {
         val initialEnd =
             Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).withStartOfDay()
         mutableStateOf(

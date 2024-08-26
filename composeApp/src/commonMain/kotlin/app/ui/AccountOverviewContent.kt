@@ -120,9 +120,9 @@ fun AccountOverview(
                                 style = FireflyAppTheme.typography.titleMedium
                             )
                             Text(
-                                text = firstAmount.getDisplayWithCurrency("$"),
+                                text = lastAmount.getDisplayWithCurrency("$"),
                                 style = FireflyAppTheme.typography.titleLarge.copy(
-                                    color = firstAmount.getTextColorForAmount()
+                                    color = lastAmount.getTextColorForAmount()
                                 )
                             )
                         }
@@ -136,9 +136,9 @@ fun AccountOverview(
                                 style = FireflyAppTheme.typography.titleMedium
                             )
                             Text(
-                                text = lastAmount.getDisplayWithCurrency("$"),
+                                text = firstAmount.getDisplayWithCurrency("$"),
                                 style = FireflyAppTheme.typography.titleLarge.copy(
-                                    color = lastAmount.getTextColorForAmount()
+                                    color = firstAmount.getTextColorForAmount()
                                 )
                             )
                         }
