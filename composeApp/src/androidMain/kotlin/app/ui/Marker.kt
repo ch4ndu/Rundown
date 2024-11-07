@@ -8,6 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import app.theme.FireflyAppTheme
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
 import com.patrykandpatrick.vico.compose.common.component.fixed
 import com.patrykandpatrick.vico.compose.common.component.rememberLayeredComponent
@@ -53,7 +55,8 @@ internal fun rememberSpendingDataMarker(
             typeface = Typeface.MONOSPACE,
             textAlignment = Layout.Alignment.ALIGN_CENTER,
             minWidth = TextComponent.MinWidth.fixed(40f),
-            lineCount = 3
+            lineCount = 3,
+            textSize = FireflyAppTheme.typography.bodyMedium.fontSize
         )
     val indicatorFrontComponent =
         rememberShapeComponent(Shape.Pill, MaterialTheme.colorScheme.surface)
@@ -135,6 +138,8 @@ internal fun rememberMarker(
             typeface = Typeface.MONOSPACE,
             textAlignment = Layout.Alignment.ALIGN_CENTER,
             minWidth = TextComponent.MinWidth.fixed(40.dp),
+//            textSize = FireflyAppTheme.typography.bodyLarge.fontSize
+            textSize = 50.sp
         )
     val indicatorFrontComponent =
         rememberShapeComponent(Shape.Pill, MaterialTheme.colorScheme.surface)

@@ -21,11 +21,11 @@ import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 open class HomeViewModel(
-    private val getOverallSpendingUseCase: GetOverallSpendingUseCase,
+    getOverallSpendingUseCase: GetOverallSpendingUseCase,
     private val transactionRepository: TransactionRepository,
-    private val accountRepository: AccountRepository,
-    private val getCashFlowUseCase: GetCashFlowUseCase,
-    private val dispatcherProvider: DispatcherProvider,
+    accountRepository: AccountRepository,
+    getCashFlowUseCase: GetCashFlowUseCase,
+    dispatcherProvider: DispatcherProvider,
     getBalanceChartDataUseCase: GetBalanceChartDataUseCase
 ) : BaseViewModel() {
 

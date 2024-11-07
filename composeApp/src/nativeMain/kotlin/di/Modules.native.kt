@@ -64,7 +64,7 @@ val mockModules = module {
     factoryOf(::MockCategoriesOverviewViewModel).bind<CategoriesOverviewViewModel>()
     factoryOf(::MockCategoryDetailsViewModel).bind<CategoryDetailsViewModel>()
 }
-actual val viewModelModule = mockModules
+actual val viewModelModule = serverModules
 
 //actual val viewModelModule = serverModules
 actual val mockViewModelModule = mockModules

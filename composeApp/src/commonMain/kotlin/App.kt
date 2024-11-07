@@ -38,7 +38,6 @@ import org.koin.core.context.unloadKoinModules
 import org.lighthousegames.logging.logging
 
 @Composable
-@Preview
 fun App() {
     FireflyAppTheme(isSystemInDarkTheme()) {
         KoinContext {

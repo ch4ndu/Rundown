@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 
 open class Screen(
-    open val title: String,
+    val title: String,
     val icon: DrawableResource,
     val route: Route
 )
