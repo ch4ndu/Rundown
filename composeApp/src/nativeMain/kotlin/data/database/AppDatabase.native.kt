@@ -18,7 +18,7 @@ actual class AppDatabaseBuilder : DbBuilder {
     actual override fun getDbBuilder(): RoomDatabase.Builder<AppDatabase> {
 
         val dbPath = documentDirectory() + "/room_database.db"
-        NSFileManager.defaultManager.createFileAtPath(dbPath, null, null)
+//        NSFileManager.defaultManager.createFileAtPath(dbPath, null, null)
         return Room.databaseBuilder<AppDatabase>(
             name = dbPath,
             factory = {
