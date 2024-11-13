@@ -2,8 +2,10 @@
 
 package data.database
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import data.database.dao.AccountChartDataDao
 import data.database.dao.AccountsDataDao
@@ -40,8 +42,8 @@ import data.database.model.transaction.Tag
     version = 1, exportSchema = false
 )
 @TypeConverters(TypeConverterUtil::class)
-abstract class AppDatabase : RoomDatabase(), DB {
-//abstract class AppDatabase : RoomDatabase() {
+@ConstructedBy(AppDatabaseCtor::class)
+abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDataDao(): AccountsDataDao
     abstract fun currencyDataDao(): CurrencyDataDao
 
@@ -52,22 +54,6 @@ abstract class AppDatabase : RoomDatabase(), DB {
     abstract fun categoryDao(): CategoryDao
     abstract fun budgetDao(): BudgetDao
     abstract fun userInfoDao(): UserInfoDao
-
-    override fun clearAllTables() {
-        super.clearAllTables()
-    }
 }
 
-// FIXME: Added a hack to resolve below issue:
-// Class 'AppDatabase_Impl' is not abstract and does not implement abstract base class member 'clearAllTables'.
-interface DB {
-    fun clearAllTables() {}
-}
-
-interface DbBuilder {
-    fun getDbBuilder(): RoomDatabase.Builder<AppDatabase>
-}
-
-expect class AppDatabaseBuilder : DbBuilder {
-    override fun getDbBuilder(): RoomDatabase.Builder<AppDatabase>
-}
+public expect object AppDatabaseCtor : RoomDatabaseConstructor<AppDatabase>

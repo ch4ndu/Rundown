@@ -24,7 +24,7 @@ import app.viewmodel.mock.MockHomeViewModel
 import app.viewmodel.mock.MockSyncWithServerViewModel
 import data.PreferenceStore
 import data.database.AppDatabase
-import data.database.AppDatabaseBuilder
+import data.database.getRoomDatabase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -32,7 +32,7 @@ import org.koin.dsl.module
 actual val platformModule = module {
 
     single<AppDatabase> {
-        AppDatabaseBuilder().getDbBuilder().build()
+        getRoomDatabase()
     }
     single { PreferenceStore().getDataStore() }
 }

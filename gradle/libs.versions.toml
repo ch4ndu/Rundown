@@ -1,38 +1,40 @@
 [versions]
 agp = "8.4.2"
 android-compileSdk = "34"
-android-minSdk = "26"
+android-minSdk = "28"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.0"
+androidx-activityCompose = "1.9.3"
 androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.1.4"
-androidx-core-ktx = "1.13.1"
+androidx-constraintlayout = "2.2.0"
+androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
-androidx-paging = "3.3.0"
-androidx-room = "2.7.0-alpha05"
+androidx-paging = "3.3.2"
 androidx-test-junit = "1.2.1"
 atomicfu = "0.23.2"
-compose-plugin = "1.6.11"
-compose = "1.6.11"
+compose-plugin = "1.7.0"
+compose = "1.7.0"
 dataStoreVersion = "1.1.1"
-kotlin_version = "2.0.20"
-kotlinx-coroutines = "1.8.1"
-kotlin_serialization_version = '1.7.0'
-kotlinxDatetime = "0.6.0"
-ksp = "2.0.20-1.0.24"
-ktorVersion = "2.3.12"
-ktorfitVersion = "2.0.1"
-ktorfit_compiler_version = "2.0.1-2.0.20"
-#skie = "0.8.1"
-sqlite = "2.5.0-alpha05"
+kotlin_version = "2.0.21"
+ksp = "2.0.21-1.0.27"
+#kotlin_version = "2.1.0-RC"
+kotlinx-coroutines = "1.9.0"
+kotlin_serialization_version = '1.7.3'
+kotlinxDatetime = "0.6.1"
+#ksp = "2.0.20-1.0.24"
+ktorVersion = "3.0.0"
+#ktorfit_compiler_version = "2.1.0-2.1.0-Beta1"
+ktorfitVersion = "2.2.0"
+#skie = "0.9.3"
+androidx-room = "2.7.0-alpha11"
+sqlite = "2.5.0-alpha11"
 junit = "4.13.2"
 
 #koin = "3.6.0-Beta5"
-koin = "4.0.0-RC1"
+koin = "4.0.0"
 #koinComposeMultiplatform = "1.2.0-Beta5"
-koinComposeMultiplatform = "4.0.0-RC1"
-navigationCompose = "2.8.0-alpha08"
+koinComposeMultiplatform = "4.0.0"
+navigationCompose = "2.8.0-alpha10"
 lifecycleViewModel = "2.8.1"
 kmlog = "1.5.0"
 
@@ -54,9 +56,6 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewModel" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewModel" }
-
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin_version" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
@@ -80,7 +79,7 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = 
 #compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 #compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin_version" }
+#kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin_version" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core-iosarm64 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-iossimulatorarm64", version.ref = "kotlinx-coroutines" }
@@ -113,7 +112,7 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "androidx-room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
-okio = "com.squareup.okio:okio:3.9.0"
+okio = "com.squareup.okio:okio:3.9.1"
 #skie-annotations = { module = "co.touchlab.skie:configuration-annotations", version.ref = "skie" }
 kmlog = { module = "org.lighthousegames:logging", version.ref = "kmlog" }
 stately-common = { module = "co.touchlab:stately-common", version = "2.0.5" }
@@ -140,7 +139,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "androidx-room" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfitVersion" }
 #skie = { id = "co.touchlab.skie", version.ref = "skie" }
-swiftklib = { id = "io.github.ttypic.swiftklib", version = "0.6.3" }
+swiftklib = { id = "io.github.ttypic.swiftklib", version = "0.6.4" }
 
 [bundles]
 ktor = [

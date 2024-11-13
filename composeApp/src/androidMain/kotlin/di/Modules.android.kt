@@ -24,7 +24,7 @@ import app.viewmodel.mock.MockHomeViewModel
 import app.viewmodel.mock.MockSyncWithServerViewModel
 import data.PreferenceStore
 import data.database.AppDatabase
-import data.database.AppDatabaseBuilder
+import data.database.getRoomDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.compose.viewmodel.dsl.viewModel
@@ -35,7 +35,7 @@ import org.udnahc.firefly.DailySyncWorker
 
 actual val platformModule = module {
     single<AppDatabase> {
-        AppDatabaseBuilder(androidContext()).getDbBuilder().build()
+        getRoomDatabase(androidContext())
     }
     single { PreferenceStore(androidContext()).getDataStore() }
 
@@ -43,17 +43,17 @@ actual val platformModule = module {
 }
 
 val serverViewModels = module {
-    viewModel { AuthViewModel(get(), get(), get()) }
-    viewModel { AccountsViewModel(get(), get(), get(), get()) }
-    viewModel { SyncWithServerViewModel(get(), get(), get()) }
-    viewModel { AccountOverviewViewModel(get(), get(), get(), get(), get()) }
-    viewModel { AccountChartsViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { AccountCashFlowDetailsViewModel(get(), get(), get(), get()) }
-    viewModel { HomeViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { DailySpendingDetailsViewModel(get(), get(), get(), get()) }
-    viewModel { BudgetListOverviewViewModel(get()) }
-    viewModel { CategoriesOverviewViewModel(get(), get(), get(), get()) }
-    viewModel { CategoryDetailsViewModel(get(), get(), get(), get(), get()) }
+    viewModelOf(::AuthViewModel)
+    viewModelOf(::AccountsViewModel)
+    viewModelOf(::SyncWithServerViewModel)
+    viewModelOf(::AccountOverviewViewModel)
+    viewModelOf(::AccountChartsViewModel)
+    viewModelOf(::AccountCashFlowDetailsViewModel)
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::DailySpendingDetailsViewModel)
+    viewModelOf(::BudgetListOverviewViewModel)
+    viewModelOf(::CategoriesOverviewViewModel)
+    viewModelOf(::CategoryDetailsViewModel)
 }
 
 actual val mockViewModelModule = module {

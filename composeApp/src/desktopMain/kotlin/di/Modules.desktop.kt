@@ -13,15 +13,14 @@ import app.viewmodel.HomeViewModel
 import app.viewmodel.SyncWithServerViewModel
 import data.PreferenceStore
 import data.database.AppDatabase
-import data.database.AppDatabaseBuilder
-import org.koin.compose.viewmodel.dsl.viewModel
+import data.database.getRoomDatabase
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val platformModule = module {
 
     single<AppDatabase> {
-        AppDatabaseBuilder().getDbBuilder().build()
+        getRoomDatabase()
     }
     single { PreferenceStore().getDataStore() }
 }

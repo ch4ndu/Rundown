@@ -21,7 +21,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_18)
         }
     }
 
@@ -64,6 +64,9 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.room.paging)
@@ -119,6 +122,7 @@ kotlin {
             implementation(libs.bundles.ktor)
 
             implementation(libs.ktorfit.lib)
+//            implementation(libs.ktorfit.compiler)
             implementation(libs.ktorfit.converters.call)
             implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.client.logging)
@@ -145,9 +149,21 @@ kotlin {
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.room.paging)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+//        commonTest.dependencies {
+//            implementation(libs.kotlin.test)
+//        }
+    }
+}
+
+dependencies {
+    listOf(
+        "kspAndroid",
+        // "kspJvm",
+        "kspIosSimulatorArm64",
+        "kspIosX64",
+        "kspIosArm64"
+    ).forEach {
+        add(it, libs.androidx.room.compiler)
     }
 }
 
@@ -171,6 +187,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
+    }
+    buildFeatures {
+        compose = true
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -181,13 +204,6 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    buildFeatures {
-        compose = true
-    }
     dependencies {
         implementation(libs.mp.android.chart)
         implementation(libs.vico.compose)
@@ -197,7 +213,7 @@ android {
         implementation(libs.navigation.compose)
         implementation(libs.lifecycle.viewmodel.compose)
 //    room-ksp bug
-        add("kspCommonMainMetadata", libs.androidx.room.compiler)
+//        add("kspCommonMainMetadata", libs.androidx.room.compiler)
 
         debugImplementation(compose.uiTooling)
     }
@@ -211,16 +227,19 @@ kotlin.sourceSets.all {
 
 composeCompiler {
     featureFlags = setOf(
-        ComposeFeatureFlag.IntrinsicRemember,
+//        ComposeFeatureFlag.IntrinsicRemember,
         ComposeFeatureFlag.OptimizeNonSkippingGroups,
-        ComposeFeatureFlag.StrongSkipping
+//        ComposeFeatureFlag.StrongSkipping
     )
 
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
-    stabilityConfigurationFile = project.file("compose_compiler_config.txt")
+//    stabilityConfigurationFile = project.file("compose_compiler_config.txt")
 }
 room {
     schemaDirectory("$projectDir/schemas")
+}
+ksp {
+    arg("room.schemaLocation", "${projectDir}/schemas")
 }
 
 compose.desktop {
