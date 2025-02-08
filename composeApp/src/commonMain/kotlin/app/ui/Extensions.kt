@@ -33,24 +33,24 @@ fun getAspectRatio(isLargeScreen: Boolean): Float = if (isLargeScreen) 1.75f els
 
 fun CategorySpending.getDisplayOverView(): AnnotatedString {
     return buildAnnotatedString {
-        if (expenseSum > 0) {
+        if (totalExpenseSum > 0) {
             withStyle(SpanStyle()) {
                 append("Expenses: ")
             }
             withStyle(SpanStyle(GrillRed)) {
-                append(expenseSum.getDisplayWithCurrency("$"))
+                append(totalExpenseSum.getDisplayWithCurrency("$"))
             }
         }
-        if (incomeSum > 0) {
+        if (totalIncomeSum > 0) {
             withStyle(SpanStyle()) {
                 append("\r\nIncome: ")
             }
             withStyle(SpanStyle(DeltaGekko)) {
-                append(incomeSum.getDisplayWithCurrency("$"))
+                append(totalIncomeSum.getDisplayWithCurrency("$"))
             }
         }
-        if (incomeSum != 0f && expenseSum != 0f) {
-            val netAmount = incomeSum - expenseSum
+        if (totalIncomeSum != 0f && totalExpenseSum != 0f) {
+            val netAmount = totalIncomeSum - totalExpenseSum
             if (netAmount > 0) {
                 withStyle(SpanStyle()) {
                     append("\r\nNet: ")

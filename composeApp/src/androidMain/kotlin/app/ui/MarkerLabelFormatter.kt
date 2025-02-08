@@ -1,8 +1,8 @@
 package app.ui
 
-import com.patrykandpatrick.vico.core.cartesian.CartesianDrawContext
+import com.patrykandpatrick.vico.core.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
-import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarkerValueFormatter
+import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
@@ -17,10 +17,10 @@ class MarkerLabelFormatter(
     private val spendingDataList: List<Any>,
     private val dateTimeFormatter: DateTimeFormat<LocalDateTime> = DateSerializer.chartMonthYearFormat,
     private val showSpendingLabel: Boolean
-) : DefaultCartesianMarkerValueFormatter(decimalFormat, colorCode) {
+) : DefaultCartesianMarker.ValueFormatter {
 
     override fun format(
-        context: CartesianDrawContext,
+        context: CartesianDrawingContext,
         targets: List<CartesianMarker.Target>
     ): CharSequence {
         val index = targets[0].x.toInt()
@@ -30,6 +30,6 @@ class MarkerLabelFormatter(
         } else if (data is ExpenseData) {
             return data.toChartLabel(showSpendingLabel, dateTimeFormatter)
         }
-        return super.format(context, targets)
+        return "unknown"
     }
 }

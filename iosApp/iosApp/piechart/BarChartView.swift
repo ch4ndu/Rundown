@@ -49,14 +49,16 @@ struct BarChartView: View {
             // Bar for each DataPoint
             BarMark(
                 x: .value("Date", dateString),
-                y: .value("Amount", expenseAmount)
+                y: .value("Amount", expenseAmount),
+                width: .fixed(5)
             )
             .foregroundStyle(barData.id == observableBarData.selectedBarData?.id ? .orange : .red)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .zIndex(0)
             BarMark(
                 x: .value("Date", dateString),
-                y: .value("Amount", incomeAmount)
+                y: .value("Amount", incomeAmount),
+                width: .fixed(5)
             )
             .foregroundStyle(barData.id == observableBarData.selectedBarData?.id ? .orange : .green)
             .clipShape(RoundedRectangle(cornerRadius: 20))

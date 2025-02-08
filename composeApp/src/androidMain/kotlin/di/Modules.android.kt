@@ -31,7 +31,7 @@ import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import org.udnahc.firefly.DailySyncWorker
+import com.udnahc.firefly.DailySyncWorker
 
 actual val platformModule = module {
     single<AppDatabase> {

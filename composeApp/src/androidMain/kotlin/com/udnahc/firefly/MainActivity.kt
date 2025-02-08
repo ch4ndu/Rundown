@@ -1,4 +1,4 @@
-package org.udnahc.firefly
+package com.udnahc.firefly
 
 import App
 import android.os.Bundle

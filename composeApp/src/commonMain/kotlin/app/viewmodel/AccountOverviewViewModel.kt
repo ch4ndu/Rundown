@@ -1,12 +1,16 @@
+@file:OptIn(ExperimentalPagingApi::class)
+
 package app.viewmodel
 
 import Constants
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import app.model.TotalsSummary
 import app.ui.areDateRangesEquivalent
 import data.database.dao.FireFlyTransactionDataDao
 import data.database.model.transaction.FireFlyTransaction
+import data.enums.ExpenseType
 import di.DispatcherProvider
 import domain.model.DateRange
 import domain.repository.TransactionRepository
@@ -40,6 +44,7 @@ open class AccountOverviewViewModel(
     private val loadState = MutableStateFlow(LoadState.Idle)
 
     private val accountIdFlow = MutableStateFlow("0")
+    private val accountTypeFlow = MutableStateFlow("asset")
 
     fun setAccountId(value: String) {
         accountIdFlow.value = value
@@ -52,12 +57,12 @@ open class AccountOverviewViewModel(
 //                    old.compareTo(new) == 0
 //                })
 
-//    private val expenseTypeFlow =
-//        MutableStateFlow(listOf(ExpenseType.EXPENSE, ExpenseType.INCOME, ExpenseType.TRANSFER))
-//
-//    fun setExpenseTypes(types: List<ExpenseType>) {
-//        expenseTypeFlow.value = types
-//    }
+    private val expenseTypeFlow =
+        MutableStateFlow(listOf(ExpenseType.EXPENSE, ExpenseType.INCOME, ExpenseType.TRANSFER))
+
+    fun setExpenseTypes(types: List<ExpenseType>) {
+        expenseTypeFlow.value = types
+    }
 
     private val dateRangeFlow =
         MutableStateFlow(
@@ -121,82 +126,95 @@ open class AccountOverviewViewModel(
                 }
             }.flowOn(dispatcherProvider.io)
 
-    open val tagSummaryAccount = combine(
-        dateRangeFlow
-            .distinctUntilChanged(areDateRangesEquivalent),
-        accountIdFlow,
-        tagsForAccountWithDate
-    ) { dateRange, accountId, tags ->
-        val tagTotalsMap = HashMap<String, TotalsSummary>()
-        withContext(dispatcherProvider.io) {
-            for (tag in tags) {
-                val expenseSum = fireFlyTransactionDataDao.getTransactionSumByAccountAndTagAndType(
-                    startDate = dateRange.startDate,
-                    endDate = dateRange.endDate,
-                    tag = tag,
-                    types = Constants.NEW_EXPENSE_TRANSACTION_TYPES,
-                    accountId = accountId.toLong()
-                )
-                val incomeSum = fireFlyTransactionDataDao.getTransactionSumByAccountAndTagAndType(
-                    startDate = dateRange.startDate,
-                    endDate = dateRange.endDate,
-                    tag = tag,
-                    types = Constants.NEW_INCOME_TRANSACTION_TYPES,
-                    accountId = accountId.toLong()
-                )
-                val transferSum = fireFlyTransactionDataDao.getTransactionSumByAccountAndTagAndType(
-                    startDate = dateRange.startDate,
-                    endDate = dateRange.endDate,
-                    tag = tag,
-                    types = Constants.TRANSFER_TRANSACTION_TYPES,
-                    accountId = accountId.toLong()
-                )
-                tagTotalsMap[tag] = TotalsSummary(
-                    expenseSum = expenseSum,
-                    incomeSum = incomeSum,
-                    transferSum = transferSum
-                )
+    open val tagSummaryAccount by lazy {
+        combine(
+            dateRangeFlow
+                .distinctUntilChanged(areDateRangesEquivalent),
+            accountIdFlow,
+            tagsForAccountWithDate,
+            expenseTypeFlow
+        ) { dateRange, accountId, tags, expenseTypeList ->
+            val tagTotalsMap = HashMap<String, TotalsSummary>()
+            withContext(dispatcherProvider.io) {
+                for (tag in tags) {
+                    val expenseSum =
+                        if (expenseTypeList.contains(ExpenseType.EXPENSE))
+                            fireFlyTransactionDataDao.getTransactionSumByAccountAndTagAndType(
+                                startDate = dateRange.startDate,
+                                endDate = dateRange.endDate,
+                                tag = tag,
+                                types = Constants.NEW_EXPENSE_TRANSACTION_TYPES,
+                                accountId = accountId.toLong()
+                            ) else 0.0
+                    val incomeSum =
+                        if (expenseTypeList.contains(ExpenseType.INCOME))
+                            fireFlyTransactionDataDao.getTransactionSumByAccountAndTagAndType(
+                                startDate = dateRange.startDate,
+                                endDate = dateRange.endDate,
+                                tag = tag,
+                                types = Constants.NEW_INCOME_TRANSACTION_TYPES,
+                                accountId = accountId.toLong()
+                            ) else 0.0
+                    val transferSum =
+                        if (expenseTypeList.contains(ExpenseType.TRANSFER))
+                            fireFlyTransactionDataDao.getTransactionSumByAccountAndTagAndType(
+                                startDate = dateRange.startDate,
+                                endDate = dateRange.endDate,
+                                tag = tag,
+                                types = Constants.TRANSFER_TRANSACTION_TYPES,
+                                accountId = accountId.toLong()
+                            ) else 0.0
+                    tagTotalsMap[tag] = TotalsSummary(
+                        expenseSum = expenseSum,
+                        incomeSum = incomeSum,
+                        transferSum = transferSum
+                    )
+                }
             }
+            tagTotalsMap
         }
-        tagTotalsMap
     }
 
-    open val transactionsForActiveTag =
+    open val transactionsForActiveTag by lazy {
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
                 accountIdFlow.flatMapLatest { accountId ->
                     activeTag.flatMapLatest { activeTag ->
-//                        expenseTypeFlow.flatMapLatest { expenseTypeList ->
-                        val typeList = mutableListOf<String>()
-//                            expenseTypeList.forEach {
-//                                if (it == ExpenseType.EXPENSE) {
-                        typeList.addAll(Constants.NEW_EXPENSE_TRANSACTION_TYPES)
-//                                }
-//                                if (it == ExpenseType.TRANSFER)
-                        typeList.addAll(Constants.TRANSFER_TRANSACTION_TYPES)
-//                                if (it == ExpenseType.INCOME)
-                        typeList.addAll(Constants.NEW_INCOME_TRANSACTION_TYPES)
-//                            }
-                        if (activeTag.isNotEmpty()) {
-                            fireFlyTransactionDataDao.getTransactionsFromAccountByTagAndType(
-                                startDate = dateRange.startDate,
-                                endDate = dateRange.endDate,
-                                types = typeList,
-                                accountId = accountId.toLong(),
-                                tag = activeTag
-                            ).flatMapLatest { transactionList ->
-                                flowOf(transactionList.sortedByDescending { it.amount })
+                        expenseTypeFlow.flatMapLatest { expenseTypeList ->
+                            val typeList = mutableListOf<String>()
+                            expenseTypeList.forEach {
+                                when (it) {
+                                    ExpenseType.EXPENSE ->
+                                        typeList.addAll(Constants.NEW_EXPENSE_TRANSACTION_TYPES)
+
+                                    ExpenseType.INCOME ->
+                                        typeList.addAll(Constants.NEW_INCOME_TRANSACTION_TYPES)
+
+                                    ExpenseType.TRANSFER ->
+                                        typeList.addAll(Constants.TRANSFER_TRANSACTION_TYPES)
+                                }
                             }
-                        } else {
-                            flowOf(emptyList())
+                            if (activeTag.isNotEmpty()) {
+                                fireFlyTransactionDataDao.getTransactionsFromAccountByTagAndType(
+                                    startDate = dateRange.startDate,
+                                    endDate = dateRange.endDate,
+                                    types = typeList,
+                                    accountId = accountId.toLong(),
+                                    tag = activeTag
+                                ).flatMapLatest { transactionList ->
+                                    flowOf(transactionList.sortedByDescending { it.amount })
+                                }
+                            } else {
+                                flowOf(emptyList())
+                            }
                         }
-//                        }
                     }
                 }
             }
+    }
 
-    open val categoriesForAccountWithDate =
+    open val categoriesForAccountWithDate by lazy {
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
@@ -213,64 +231,71 @@ open class AccountOverviewViewModel(
                         }.distinctUntilChanged()
                 }
             }
-
-    open val categorySummaryAccount = combine(
-        dateRangeFlow.distinctUntilChanged(areDateRangesEquivalent),
-        accountIdFlow,
-        categoriesForAccountWithDate
-    ) { dateRange, accountId, categories ->
-        val categoriesTotalsMap = HashMap<String, TotalsSummary>()
-        withContext(dispatcherProvider.io) {
-            for (category in categories) {
-                val expenseSum =
-                    fireFlyTransactionDataDao.getTransactionSumByAccountAndCategoryAndType(
-                        startDate = dateRange.startDate,
-                        endDate = dateRange.endDate,
-                        category = category,
-                        types = Constants.NEW_EXPENSE_TRANSACTION_TYPES,
-                        accountId = accountId.toLong()
-                    )
-                val incomeSum =
-                    fireFlyTransactionDataDao.getTransactionSumByAccountAndCategoryAndType(
-                        startDate = dateRange.startDate,
-                        endDate = dateRange.endDate,
-                        category = category,
-                        types = Constants.NEW_INCOME_TRANSACTION_TYPES,
-                        accountId = accountId.toLong()
-                    )
-                val transferSum =
-                    fireFlyTransactionDataDao.getTransactionSumByAccountAndCategoryAndType(
-                        startDate = dateRange.startDate,
-                        endDate = dateRange.endDate,
-                        category = category,
-                        types = Constants.TRANSFER_TRANSACTION_TYPES,
-                        accountId = accountId.toLong()
-                    )
-                categoriesTotalsMap[category] = TotalsSummary(
-                    expenseSum = expenseSum,
-                    incomeSum = incomeSum,
-                    transferSum = transferSum
-                )
-            }
-        }
-        categoriesTotalsMap
     }
 
-    open val transactionsForActiveCategory =
+    open val categorySummaryAccount by lazy {
+        combine(
+            dateRangeFlow.distinctUntilChanged(areDateRangesEquivalent),
+            accountIdFlow,
+            categoriesForAccountWithDate,
+            expenseTypeFlow
+        ) { dateRange, accountId, categories, expenseTypeList ->
+            val categoriesTotalsMap = HashMap<String, TotalsSummary>()
+            withContext(dispatcherProvider.io) {
+                for (category in categories) {
+                    val expenseSum = if (expenseTypeList.contains(ExpenseType.EXPENSE))
+                        fireFlyTransactionDataDao.getTransactionSumByAccountAndCategoryAndType(
+                            startDate = dateRange.startDate,
+                            endDate = dateRange.endDate,
+                            category = category,
+                            types = Constants.NEW_EXPENSE_TRANSACTION_TYPES,
+                            accountId = accountId.toLong()
+                        ) else 0.0
+                    val incomeSum = if (expenseTypeList.contains(ExpenseType.INCOME))
+                        fireFlyTransactionDataDao.getTransactionSumByAccountAndCategoryAndType(
+                            startDate = dateRange.startDate,
+                            endDate = dateRange.endDate,
+                            category = category,
+                            types = Constants.NEW_INCOME_TRANSACTION_TYPES,
+                            accountId = accountId.toLong()
+                        ) else 0.0
+                    val transferSum = if (expenseTypeList.contains(ExpenseType.TRANSFER))
+                        fireFlyTransactionDataDao.getTransactionSumByAccountAndCategoryAndType(
+                            startDate = dateRange.startDate,
+                            endDate = dateRange.endDate,
+                            category = category,
+                            types = Constants.TRANSFER_TRANSACTION_TYPES,
+                            accountId = accountId.toLong()
+                        ) else 0.0
+                    categoriesTotalsMap[category] = TotalsSummary(
+                        expenseSum = expenseSum,
+                        incomeSum = incomeSum,
+                        transferSum = transferSum
+                    )
+                }
+            }
+            categoriesTotalsMap
+        }
+    }
+
+    open val transactionsForActiveCategory by lazy {
         dateRangeFlow.flatMapLatest { dateRange ->
             accountIdFlow.flatMapLatest { accountId ->
                 activeCategory.flatMapLatest { activeCategory ->
-//                    expenseTypeFlow.flatMapLatest { expenseTypeList ->
+                    expenseTypeFlow.flatMapLatest { expenseTypeList ->
                         val typeList = mutableListOf<String>()
-//                        expenseTypeList.forEach {
-//                            if (it == ExpenseType.EXPENSE) {
-                                typeList.addAll(Constants.NEW_EXPENSE_TRANSACTION_TYPES)
-//                            }
-//                            if (it == ExpenseType.TRANSFER)
-                                typeList.addAll(Constants.TRANSFER_TRANSACTION_TYPES)
-//                            if (it == ExpenseType.INCOME)
-                                typeList.addAll(Constants.NEW_INCOME_TRANSACTION_TYPES)
-//                        }
+                        expenseTypeList.forEach {
+                            when (it) {
+                                ExpenseType.EXPENSE ->
+                                    typeList.addAll(Constants.NEW_EXPENSE_TRANSACTION_TYPES)
+
+                                ExpenseType.INCOME ->
+                                    typeList.addAll(Constants.NEW_INCOME_TRANSACTION_TYPES)
+
+                                ExpenseType.TRANSFER ->
+                                    typeList.addAll(Constants.TRANSFER_TRANSACTION_TYPES)
+                            }
+                        }
                         if (activeCategory.isNotEmpty()) {
                             fireFlyTransactionDataDao.getTransactionsFromAccountByCategoryAndType(
                                 startDate = dateRange.startDate,
@@ -284,11 +309,11 @@ open class AccountOverviewViewModel(
                         } else {
                             flowOf(emptyList())
                         }
-//                    }.flowOn(dispatcherProvider.io)
+                    }.flowOn(dispatcherProvider.io)
                 }
             }
         }
-
+    }
 
     open fun getNewTransactionListForAccount(
         accountType: String,

@@ -1,3 +1,4 @@
+import androidx.compose.runtime.Composable
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 
@@ -8,4 +9,8 @@ actual fun Double.getDisplayWithCurrency(currencySymbol: String): String {
     formatter.maximumFractionDigits = 2u
     formatter.numberStyle = 1u //Decimal
     return """$currencySymbol${formatter.stringFromNumber(NSNumber(this))!!}"""
+}
+
+@Composable
+actual fun BackHandler(onBack: () -> Unit) {
 }

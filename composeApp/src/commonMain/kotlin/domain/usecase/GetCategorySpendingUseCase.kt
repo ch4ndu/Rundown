@@ -54,12 +54,13 @@ class GetCategorySpendingUseCase(
                     CategorySpending(
                         categoryName = category,
                         expenseIncomeData = expenseIncomeDataList,
-                        expenseSum = totalExpenseSum.toFloat(),
-                        incomeSum = totalIncome.toFloat()
+                        totalExpenseSum = totalExpenseSum.toFloat(),
+                        totalIncomeSum = totalIncome.toFloat()
                     )
                 )
             }
-            list.sortedByDescending { it.categoryName }.reversed()
+            list.filter { it.totalIncomeSum > 0 || it.totalExpenseSum > 0 }
+                .sortedByDescending { it.categoryName }.reversed()
         }.await()
     }
 }

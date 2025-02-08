@@ -27,6 +27,10 @@ open class BudgetListOverviewViewModel(
             )
         )
 
+    fun setDateRange(dateRange: DateRange) {
+        dateRangeFlow.value = dateRange
+    }
+
     open val budgetListOverviewFlow =
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)

@@ -9,14 +9,12 @@ import di.DispatcherProvider
 import domain.atBeginningOfMonth
 import domain.currentDate
 import domain.minusMonths
-import domain.model.CategorySpending
 import domain.model.DateRange
 import domain.repository.TransactionRepository
 import domain.usecase.GetCategorySpendingUseCase
 import domain.withEndOfMonthAtEndOfDay
 import domain.withStartOfDay
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -43,7 +41,7 @@ open class CategoriesOverviewViewModel(
         dateRangeFlow.value = dateRange
     }
 
-    private val categoriesWithDate =
+    private val categoriesList by lazy {
         dateRangeFlow
             .distinctUntilChanged(areDateRangesEquivalent)
             .flatMapLatest { dateRange ->
@@ -55,12 +53,13 @@ open class CategoriesOverviewViewModel(
                     .map { categoryList ->
                         val categorySet = categoryList.toSet()
                         categorySet.toList()
-                    }.distinctUntilChanged()
+                    }
             }
+    }
 
-    open val allCategoriesSpending: Flow<List<CategorySpending>> =
+    open val allCategoriesSpending by lazy {
         dateRangeFlow.flatMapLatest { range ->
-            categoriesWithDate.flatMapLatest { categories ->
+            categoriesList.flatMapLatest { categories ->
                 flow {
                     emit(
                         getCategorySpendingUseCase.getCategorySpendingDataForChart(
@@ -72,4 +71,5 @@ open class CategoriesOverviewViewModel(
                 }
             }
         }.flowOn(dispatcherProvider.default)
+    }
 }

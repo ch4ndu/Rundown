@@ -38,16 +38,16 @@ import data.enums.ExpenseType
 actual fun PieChart(
     modifier: Modifier,
     pieEntriesMap: Map<String, Double>,
-//    tagTotal: MutableState<Double>,
+    tagTotal: MutableState<Double>,
     setActiveTag: (String) -> Unit,
-//    types: List<ExpenseType>
+    types: List<ExpenseType>
 ) {
     val surfaceColor = FireflyAppTheme.colorScheme.surface.toArgb()
     val textSize = FireflyAppTheme.typography.labelMedium.fontSize.value
     val textColor = FireflyAppTheme.colorScheme.onSurface.toArgb()
     val entries = mutableListOf<PieEntry>()
     for (entry in pieEntriesMap.entries) {
-//        var sum = 0f
+        var sum = 0f
 //        if (types.contains(ExpenseType.EXPENSE)) {
 //        sum += entry.value.expenseSum.toFloat()
 //        }
@@ -76,7 +76,7 @@ actual fun PieChart(
         OrangeSpice.toArgb()
     )
     pieDataSet.colors = colors.toList()
-    pieDataSet.sliceSpace = 2f
+    pieDataSet.sliceSpace = 4f
     pieDataSet.selectionShift = 16f
 
     pieDataSet.setDrawValues(false)
@@ -108,23 +108,24 @@ actual fun PieChart(
                 setCenterTextColor(textColor)
                 setCenterTextSize(textSize)
 
-                holeRadius = 0f
-//                holeRadius = 25f
-//                transparentCircleRadius = 35f
-                transparentCircleRadius = 0f
+//                holeRadius = 0f
+//                transparentCircleRadius = 0f
+                holeRadius = 25f
+                transparentCircleRadius = 35f
                 isHighlightPerTapEnabled = true
                 setDrawMarkers(false)
+                isRotationEnabled = false
 
-                legend.isEnabled = true
-                legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-                legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-                legend.orientation = Legend.LegendOrientation.HORIZONTAL
-                legend.setDrawInside(false)
-                legend.xEntrySpace = 7f
-                legend.yEntrySpace = 0f
-                legend.yOffset = 0f
-                legend.isWordWrapEnabled = true
-                legend.textColor = textColor
+                legend.isEnabled = false
+//                legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+//                legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+//                legend.orientation = Legend.LegendOrientation.HORIZONTAL
+//                legend.setDrawInside(false)
+//                legend.xEntrySpace = 7f
+//                legend.yEntrySpace = 0f
+//                legend.yOffset = 0f
+//                legend.isWordWrapEnabled = true
+//                legend.textColor = textColor
 
                 setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onValueSelected(
@@ -133,7 +134,7 @@ actual fun PieChart(
                     ) {
                         if (e is PieEntry) {
                             setActiveTag.invoke(e.label)
-//                            tagTotal.value = e.value.toDouble()
+                            tagTotal.value = e.value.toDouble()
                             highlightEntry.value = h
                         }
                     }

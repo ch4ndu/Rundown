@@ -16,6 +16,7 @@ import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -93,12 +94,13 @@ fun FilterScreen(
     val state = rememberDateRangePickerState(
         initialSelectedStartDateMillis = dateRange.startDate.millis(),
         initialSelectedEndDateMillis = dateRange.endDate.millis(),
-        yearRange = IntRange(currentYear - 3, currentYear)
+        yearRange = IntRange(currentYear - 3, currentYear + 1)
     )
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(100.dp, max = (screenHeight * 4 / 5).dp)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -172,7 +174,6 @@ fun FilterScreen(
                         .weight(1f)
                         .fillMaxWidth(1f)
                 ) {
-//                    Spacer(modifier = Modifier.height(16.dp))
                     filterList.forEachIndexed { index, filterPair: Pair<String, DateRange> ->
                         val isSelected = filterPair.first == quickFilterSelected.value.first
                         Column(

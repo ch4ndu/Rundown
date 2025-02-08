@@ -30,12 +30,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -58,7 +55,6 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -66,7 +62,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.model.TotalsSummary
@@ -86,18 +81,11 @@ import app.viewmodel.AccountChartsViewModel
 import app.viewmodel.AccountOverviewViewModel
 import data.database.model.transaction.FireFlyTransaction
 import data.enums.ExpenseType
-import domain.atBeginningOfMonth
-import domain.minusMonths
 import domain.model.DateRange
-import domain.withStartOfDay
 import fireflycomposemultiplatform.composeapp.generated.resources.Res
 import fireflycomposemultiplatform.composeapp.generated.resources.calendar_month_outline
-import fireflycomposemultiplatform.composeapp.generated.resources.filter_menu
 import getDisplayWithCurrency
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -132,10 +120,8 @@ fun AccountOverviewScreen(
     }
 
     val selectedDateRange = rememberSaveable(saver = Savers.DateRange) {
-        val initialEnd =
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).withStartOfDay()
         mutableStateOf(
-            DateRange(initialEnd.minusMonths(5).atBeginningOfMonth(), initialEnd)
+            DateRange.getDefaultRange()
         )
     }
     val accountCashFlowDetailsClickInternal = remember {
@@ -259,7 +245,7 @@ fun AccountOverviewScreen(
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
-                ShowTopBar(
+                ShowTopBarWithCalendar(
                     accountName = accountName,
                     modalSheetState = modalSheetState,
                     onBack = onBack,
@@ -296,9 +282,9 @@ fun AccountOverviewScreen(
             val tabRowHeight = remember {
                 mutableStateOf(0.dp)
             }
-//            val setExpenseTypes = { types: List<ExpenseType> ->
-//                accountOverviewViewModel.setExpenseTypes(types)
-//            }
+            val setExpenseTypes = { types: List<ExpenseType> ->
+                accountOverviewViewModel.setExpenseTypes(types)
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -334,7 +320,7 @@ fun AccountOverviewScreen(
                         transactionsForActiveItem = transactionsForActiveCategory.value,
                         setActiveItem = setActiveCategory,
                         tabVisible = tabVisible,
-//                        expenseTypeUpdated = setExpenseTypes,
+                        expenseTypeUpdated = setExpenseTypes,
                         tabRowHeight = tabRowHeight.value
                     )
 
@@ -345,7 +331,7 @@ fun AccountOverviewScreen(
                         transactionsForActiveItem = transactionForActiveTag.value,
                         setActiveItem = setActiveTag,
                         tabVisible = tabVisible,
-//                        expenseTypeUpdated = setExpenseTypes,
+                        expenseTypeUpdated = setExpenseTypes,
                         tabRowHeight = tabRowHeight.value
                     )
                 }
@@ -385,7 +371,7 @@ fun AccountOverviewScreen(
 }
 
 @Composable
-private fun ShowTopBar(
+private fun ShowTopBarWithCalendar(
     accountName: String,
     modalSheetState: BottomSheetScaffoldState,
     refreshClicked: () -> Unit,
@@ -463,7 +449,7 @@ fun AccountPieChart(
     transactionsForActiveItem: List<FireFlyTransaction>,
     setActiveItem: (String) -> Unit,
     tabVisible: (visible: Boolean) -> Unit,
-//    expenseTypeUpdated: (types: List<ExpenseType>) -> Unit,
+    expenseTypeUpdated: (types: List<ExpenseType>) -> Unit,
     tabRowHeight: Dp
 ) {
     LaunchedEffect(itemSumMap.entries) {
@@ -486,10 +472,10 @@ fun AccountPieChart(
     val expenseTypesSelected = remember {
         mutableStateOf(setOf(ExpenseType.EXPENSE, ExpenseType.INCOME, ExpenseType.TRANSFER))
     }
-//    LaunchedEffect(Unit) {
-//        // reset these values at every launch
-//        expenseTypeUpdated.invoke(expenseTypesSelected.value.toMutableList())
-//    }
+    LaunchedEffect(Unit) {
+        // reset these values at every launch
+        expenseTypeUpdated.invoke(expenseTypesSelected.value.toMutableList())
+    }
     LaunchedEffect(expenseSelected, incomeSelected, transferSelected) {
         val set = mutableSetOf<ExpenseType>()
         if (expenseSelected) {
@@ -503,13 +489,13 @@ fun AccountPieChart(
         }
         expenseTypesSelected.value = set
     }
-//    val selectedTypes = remember(expenseTypesSelected) {
-//        mutableStateOf(listOf<ExpenseType>())
-//    }
-//    LaunchedEffect(expenseTypesSelected.value) {
-//        selectedTypes.value = expenseTypesSelected.value.toMutableList()
-//        expenseTypeUpdated.invoke(selectedTypes.value)
-//    }
+    val selectedTypes = remember(expenseTypesSelected) {
+        mutableStateOf(listOf<ExpenseType>())
+    }
+    LaunchedEffect(expenseTypesSelected.value) {
+        selectedTypes.value = expenseTypesSelected.value.toMutableList()
+        expenseTypeUpdated.invoke(selectedTypes.value)
+    }
 
     LazyColumn(
         state = listState,
@@ -519,6 +505,79 @@ fun AccountPieChart(
     ) {
         item {
             Spacer(modifier = Modifier.height(tabRowHeight))
+        }
+        item(key = "typeFilter") {
+            FlowRow {
+                Spacer(modifier = Modifier.width(5.dp))
+                FilterChip(
+                    onClick = {
+                        if (incomeSelected || transferSelected) {
+                            expenseSelected = !expenseSelected
+                        }
+                    },
+                    label = {
+                        Text(ExpenseType.EXPENSE.name)
+                    },
+                    selected = expenseSelected,
+                    leadingIcon = if (expenseSelected) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "Done icon",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    },
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                FilterChip(
+                    onClick = {
+                        if (expenseSelected || transferSelected) {
+                            incomeSelected = !incomeSelected
+                        }
+                    },
+                    label = {
+                        Text(ExpenseType.INCOME.name)
+                    },
+                    selected = incomeSelected,
+                    leadingIcon = if (incomeSelected) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "Done icon",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    },
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                FilterChip(
+                    onClick = {
+                        if (expenseSelected || incomeSelected) {
+                            transferSelected = !transferSelected
+                        }
+                    },
+                    label = {
+                        Text(ExpenseType.TRANSFER.name)
+                    },
+                    selected = transferSelected,
+                    leadingIcon = if (transferSelected) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "Done icon",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    },
+                )
+            }
         }
         item(key = "pieChart") {
             Box(
@@ -539,8 +598,8 @@ fun AccountPieChart(
                         }
                     }.toMap(),
                     setActiveTag = setActiveItem,
-//                    tagTotal = tagTotal,
-//                    types = selectedTypes.value
+                    tagTotal = tagTotal,
+                    types = selectedTypes.value
                 )
             }
         }

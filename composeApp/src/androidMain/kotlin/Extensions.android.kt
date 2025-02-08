@@ -1,6 +1,8 @@
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import app.theme.DeltaGekko
 import app.theme.GrillRed
@@ -32,7 +34,7 @@ fun ExpenseIncomeData.toChartLabel(dateTimeFormatter: DateTimeFormat<LocalDateTi
     builder.append(date.format(dateTimeFormatter))
     if (expenseAmount > 0) {
         builder.append(
-            "\r\nExpenses:${expenseAmount.toDouble().getDisplayWithCurrency("$")}",
+            "\r\nExpense: ${expenseAmount.toDouble().getDisplayWithCurrency("$")}",
             ForegroundColorSpan(GrillRed.toArgb()),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
@@ -55,7 +57,7 @@ fun ExpenseData.toChartLabel(
     builder.append(date.format(dateTimeFormatter))
     if (showSpendingLabel) {
         builder.append(
-            "\r\nExpenses:${expenseAmount.toDouble().getDisplayWithCurrency("$")}",
+            "\r\nExpense: ${expenseAmount.toDouble().getDisplayWithCurrency("$")}",
             ForegroundColorSpan(GrillRed.toArgb()),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
@@ -67,4 +69,9 @@ fun ExpenseData.toChartLabel(
         )
     }
     return builder
+}
+
+@Composable
+actual fun BackHandler(onBack: () -> Unit) {
+    BackHandler(enabled = true, onBack = onBack)
 }

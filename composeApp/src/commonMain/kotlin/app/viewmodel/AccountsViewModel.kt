@@ -1,5 +1,6 @@
 package app.viewmodel
 
+import Platform
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
@@ -7,6 +8,7 @@ import data.AppPref
 import di.DispatcherProvider
 import domain.repository.AccountRepository
 import domain.usecase.SyncWithServerUseCase
+import io.ktor.util.PlatformUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

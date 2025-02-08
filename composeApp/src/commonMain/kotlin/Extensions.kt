@@ -1,12 +1,14 @@
-import androidx.compose.ui.text.intl.Locale
+import androidx.compose.runtime.Composable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 import kotlin.math.round
 
 
 expect fun Double.getDisplayWithCurrency(currencySymbol: String): String
+
+@Composable
+expect fun BackHandler(onBack: () -> Unit)
 
 fun Double.roundTo2Digits(): Double {
     return round(this * 100) / 100.00

@@ -11,20 +11,23 @@ import app.theme.HaloBlue
 import app.ui.chartutils.VicoLineBottomAxisFormatter
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.compose.common.shader.color
+import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.core.cartesian.Zoom
-import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.common.shader.DynamicShader
+import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import domain.model.ExpenseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -62,31 +65,31 @@ fun VicoLineChart(
         VicoLineBottomAxisFormatter(chartDataList)
     }
     val chartLineColor = HaloBlue
-    val bottomAxis = rememberBottomAxis(
+    val bottomAxis = HorizontalAxis.rememberBottom(
         valueFormatter = vicoLineFormatter,
         guideline = null,
         tick = null,
-        itemPlacer = AxisItemPlacer.Horizontal.default(
-            spacing = chartDataList.size / 2,
-            offset = 20,
-            shiftExtremeTicks = true,
+        itemPlacer = HorizontalAxis.ItemPlacer.aligned(
+            spacing = { chartDataList.size / 2 },
+            offset = { 20 },
+            shiftExtremeLines = true,
             addExtremeLabelPadding = true
         ),
         label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize)
     )
-    val startAxisFormatter = CartesianValueFormatter { value, _, _ ->
+    val startAxisFormatter = CartesianValueFormatter { _, value, _ ->
         "${value.roundToInt()}"
     }
-    val startAxis = rememberStartAxis(
+    val startAxis = VerticalAxis.rememberStart(
         valueFormatter = startAxisFormatter,
         tick = null,
-        itemPlacer = AxisItemPlacer.Vertical.count(count = { 5 }),
+        itemPlacer = VerticalAxis.ItemPlacer.count(count = { 5 }),
         label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize),
     )
-    val modelProducer = remember { CartesianChartModelProducer.build() }
+    val modelProducer = remember { CartesianChartModelProducer() }
     LaunchedEffect(chartDataList.size) {
         withContext(Dispatchers.Default) {
-            modelProducer.tryRunTransaction {
+            modelProducer.runTransaction {
                 lineSeries {
                     series(chartDataList.map { it.expenseAmount })
                 }
@@ -95,30 +98,43 @@ fun VicoLineChart(
     }
     val scrollState = rememberVicoScrollState(scrollEnabled = false)
     val zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content)
+    val minY = chartDataList.minBy { it.expenseAmount }.expenseAmount.toDouble()
+    val maxY = chartDataList.maxBy { it.expenseAmount }.expenseAmount.toDouble()
+    val rangeProvider = CartesianLayerRangeProvider.fixed(minY = minY, maxY = maxY)
     CartesianChartHost(
         modifier = modifier,
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
-                listOf(
-                    rememberLineSpec(
-                        shader = DynamicShader.color(chartLineColor),
-                        thickness = 0.8f.dp,
-                        backgroundShader = DynamicShader.verticalGradient(
-                            colors = intArrayOf(
+                lineProvider = LineCartesianLayer.LineProvider.series(
+                    LineCartesianLayer.rememberLine(
+                        fill = LineCartesianLayer.LineFill.single(fill(chartLineColor.copy(0.8f))),
+                        areaFill =
+                        LineCartesianLayer.AreaFill.single(
+                            fill(
+                                ShaderProvider.verticalGradient(
                                 chartLineColor.copy(0.8f).toArgb(),
-                                chartLineColor.copy(0.5f).toArgb()
-                            ),
-                            positions = null
+                                    chartLineColor.copy(0.5f).toArgb()
+                                )
+                            )
                         )
-                    )
-                )
+                    ),
+                    LineCartesianLayer.rememberLine(
+                        LineCartesianLayer.LineFill.single(
+                            fill(
+                                chartLineColor.copy(0.5f)
+                            )
+                        )
+                    ),
+                ),
+                pointSpacing = 0.8f.dp,
+                rangeProvider = rangeProvider
             ),
             startAxis = startAxis,
-            bottomAxis = bottomAxis
+            bottomAxis = bottomAxis,
+            marker = marker
         ),
         modelProducer = modelProducer,
         zoomState = zoomState,
         scrollState = scrollState,
-        marker = marker
     )
 }

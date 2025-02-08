@@ -1,4 +1,4 @@
-package org.udnahc.firefly
+package com.udnahc.firefly
 
 import android.content.BroadcastReceiver
 import android.content.Context

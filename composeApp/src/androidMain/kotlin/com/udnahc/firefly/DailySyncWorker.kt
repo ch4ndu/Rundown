@@ -1,4 +1,4 @@
-package org.udnahc.firefly
+package com.udnahc.firefly
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -18,13 +18,8 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import data.AppPref
 import data.database.serializers.DateSerializer
-import di.DispatcherProvider
-import domain.repository.AccountRepository
-import domain.repository.BudgetRepository
-import domain.repository.ChartsRepository
 import domain.repository.ConnectivityStateManager
 import domain.repository.HealthCheck
-import domain.repository.TransactionRepository
 import domain.usecase.SyncStatus
 import domain.usecase.SyncWithServerUseCase
 import kotlinx.datetime.Clock
@@ -35,7 +30,6 @@ import org.lighthousegames.logging.logging
 import java.time.Duration
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
-import kotlin.math.log
 
 class DailySyncWorker(
     private val appContext: Context,

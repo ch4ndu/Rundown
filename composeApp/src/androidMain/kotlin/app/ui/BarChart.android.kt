@@ -18,10 +18,8 @@ import app.theme.GrillRed
 import app.ui.chartutils.SpendingDataBottomAxisFormatter
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
-import com.patrykandpatrick.vico.compose.cartesian.decoration.rememberHorizontalLine
-import com.patrykandpatrick.vico.compose.cartesian.fullWidth
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
@@ -29,10 +27,10 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.of
-import com.patrykandpatrick.vico.core.cartesian.HorizontalLayout
+import com.patrykandpatrick.vico.compose.common.insets
 import com.patrykandpatrick.vico.core.cartesian.Zoom
-import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
@@ -41,8 +39,8 @@ import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.core.cartesian.marker.ColumnCartesianLayerMarkerTarget
-import com.patrykandpatrick.vico.core.common.Dimensions
-import com.patrykandpatrick.vico.core.common.shape.Shape
+import com.patrykandpatrick.vico.core.common.Fill
+import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +49,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.DateTimeFormat
 import org.lighthousegames.logging.logging
 import kotlin.math.roundToInt
+
 private val log = logging()
 /**
  * [dataList] accepts [ExpenseIncomeData] or [ExpenseData]
@@ -67,12 +66,12 @@ actual fun BarChart(
 ) {
     val barChartMergeMode = remember(mergeMode) {
         when(mergeMode) {
-            MergeMode.Grouped -> ColumnCartesianLayer.MergeMode.Grouped
+            MergeMode.Grouped -> ColumnCartesianLayer.MergeMode.Grouped()
             MergeMode.Stacked -> ColumnCartesianLayer.MergeMode.Stacked
         }
     }
     log.d { "spendingDataList size: ${dataList.size}" }
-    val modelProducer = remember { CartesianChartModelProducer.build() }
+    val modelProducer = remember { CartesianChartModelProducer() }
     val isSpendingData = remember(dataList) {
         mutableStateOf(true)
     }
@@ -98,7 +97,7 @@ actual fun BarChart(
                 val selectedPosition = targets[0].x.toInt()
                 log.d { "onMarkerShown:selectedPosition $selectedPosition" }
                 log.d { "onMarkerShown:isSpendingData ${isSpendingData.value}" }
-                persistentMarkers.value = mapOf(targets[0].x to marker)
+                persistentMarkers.value = mapOf(targets[0].x.toFloat() to marker)
                 dataSelected.invoke(dataList[selectedPosition])
             }
 
@@ -109,7 +108,7 @@ actual fun BarChart(
                 log.d { "onUpdated:$targets" }
                 log.d { "onMarkerShown:isSpendingData ${isSpendingData.value}" }
                 val selectedPosition = targets[0].x.toInt()
-                persistentMarkers.value = mapOf(targets[0].x to marker)
+                persistentMarkers.value = mapOf(targets[0].x.toFloat() to marker)
                 dataSelected.invoke(dataList[selectedPosition])
                 val color =
                     (targets[0] as? ColumnCartesianLayerMarkerTarget)?.columns?.get(0)?.color
@@ -127,7 +126,7 @@ actual fun BarChart(
         if (dataList.isNotEmpty()) {
             withContext(Dispatchers.Default) {
                 log.d { "running transaction" }
-                modelProducer.tryRunTransaction {
+                modelProducer.runTransaction {
                     columnSeries {
                         if (dataList[0] is ExpenseIncomeData) {
                             isSpendingData.value = true
@@ -156,39 +155,36 @@ actual fun BarChart(
     val horizontalLine = rememberComposeHorizontalLine(horizontalLineValue)
 
     val startAxisFormatter by remember(dataList) {
-        mutableStateOf(CartesianValueFormatter { value, _, _ -> "${value.roundToInt()}" })
+        mutableStateOf(CartesianValueFormatter { _, value, _ -> "${value.roundToInt()}" })
     }
     val bottomAxisFormatter by remember(dataList) {
         mutableStateOf(SpendingDataBottomAxisFormatter(dataList, dateTimeFormatter))
     }
-    val startAxis = rememberStartAxis(
+    val startAxis = VerticalAxis.rememberStart(
         valueFormatter = startAxisFormatter,
         tick = null,
         guideline = null,
-        itemPlacer = AxisItemPlacer.Vertical.count(count = { 3 }),
+        itemPlacer = VerticalAxis.ItemPlacer.count(count = { 3 }),
         label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize)
     )
-    val bottomAxis = rememberBottomAxis(
+    val bottomAxis = HorizontalAxis.rememberBottom(
         guideline = null,
         tick = null,
         valueFormatter = bottomAxisFormatter,
         itemPlacer = remember {
-            AxisItemPlacer.Horizontal.default(
-                spacing = 2,
-                addExtremeLabelPadding = true
-            )
+            HorizontalAxis.ItemPlacer.aligned(spacing = { 2 }, addExtremeLabelPadding = true)
         },
         label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize)
     )
     val expenseLineComponent = rememberLineComponent(
-        color = GrillRed,
+        fill = Fill(color = GrillRed.toArgb()),
         thickness = 16.dp,
-        shape = Shape.rounded(allPercent = 40),
+        shape = CorneredShape.rounded(allPercent = 40),
     )
     val incomeLineComponent = rememberLineComponent(
-        color = DeltaGekko,
+        fill = Fill(color = DeltaGekko.toArgb()),
         thickness = 16.dp,
-        shape = Shape.rounded(allPercent = 40),
+        shape = CorneredShape.rounded(allPercent = 40),
     )
     val columnSeries = remember(isSpendingData.value) {
         mutableStateOf(
@@ -215,16 +211,15 @@ actual fun BarChart(
             ),
             startAxis = startAxis,
             bottomAxis = bottomAxis,
-            persistentMarkers = if (showPersistedMarkers) persistentMarkers.value else null,
-            decorations = if(horizontalLineValue>0f) listOf( horizontalLine) else null
+            persistentMarkers = { if (showPersistedMarkers) persistentMarkers.value },
+            decorations = if (horizontalLineValue > 0f) listOf(horizontalLine) else emptyList(),
+            marker = marker,
+            markerVisibilityListener = markerVisibilityChangeListener
         ),
         modelProducer = modelProducer,
         zoomState = zoomState,
         scrollState = scrollState,
         modifier = modifier,
-        marker = marker,
-        horizontalLayout = HorizontalLayout.fullWidth(),
-        markerVisibilityListener = markerVisibilityChangeListener,
     )
 }
 
@@ -232,18 +227,18 @@ actual fun BarChart(
 @Composable
 private fun rememberComposeHorizontalLine(horizontalLine: Float): HorizontalLine {
     val color = Color(-2893786)
-    return rememberHorizontalLine(
-        y = { horizontalLine },
-        line = rememberLineComponent(color, 2f.dp),
+    return HorizontalLine(
+        y = { horizontalLine.toDouble() },
+        line = rememberLineComponent(fill = Fill(color.toArgb()), 2.dp),
         labelComponent =
         rememberTextComponent(
-            background = rememberShapeComponent(Shape.Pill, color),
-            padding =
-            Dimensions.of(
-                8f.dp,
-                2f.dp,
+            background = rememberShapeComponent(
+                shape = CorneredShape.Pill,
+                fill = Fill(color = color.toArgb())
             ),
-            margins = Dimensions.of(4f.dp),
+            padding =
+            insets(8.dp, 2.dp),
+            margins = insets(4.dp),
             typeface = Typeface.MONOSPACE,
         ),
     )

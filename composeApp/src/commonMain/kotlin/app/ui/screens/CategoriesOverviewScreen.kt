@@ -2,6 +2,7 @@
 
 package app.ui.screens
 
+import BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +34,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,7 +59,6 @@ import domain.withEndOfMonthAtEndOfDay
 import domain.withStartOfDay
 import fireflycomposemultiplatform.composeapp.generated.resources.Res
 import fireflycomposemultiplatform.composeapp.generated.resources.calendar_month_outline
-import fireflycomposemultiplatform.composeapp.generated.resources.filter_menu
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -82,7 +81,6 @@ fun CategoriesOverviewScreen(
         )
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -97,24 +95,21 @@ fun CategoriesOverviewScreen(
 
     val selectedDateRange = rememberSaveable(saver = Savers.DateRange) {
         mutableStateOf(
-            DateRange(
-                currentDate().minusMonths(5).atBeginningOfMonth().withStartOfDay(),
-                currentDate().withEndOfMonthAtEndOfDay()
-            )
+            DateRange.getDefaultRange()
         )
     }
     LaunchedEffect(selectedDateRange.value) {
         categoriesOverviewViewModel.setDateRange(selectedDateRange.value)
     }
-//    BackHandler(enabled = true) {
-//        if (modalSheetState.bottomSheetState.currentValue == SheetValue.Expanded) {
-//            coroutineScope.launch {
-//                modalSheetState.bottomSheetState.hide()
-//            }
-//        } else {
-//            onBack.invoke()
-//        }
-//    }
+    BackHandler {
+        if (modalSheetState.bottomSheetState.currentValue == SheetValue.Expanded) {
+            coroutineScope.launch {
+                modalSheetState.bottomSheetState.hide()
+            }
+        } else {
+            onBack.invoke()
+        }
+    }
 
     val isLargeScreen = isLargeScreen()
     val aspectRatio = remember(isLargeScreen.value) {
@@ -126,11 +121,11 @@ fun CategoriesOverviewScreen(
             FilterScreen(
                 dateRange = selectedDateRange.value,
                 onClose = {
-                    scope.launch { modalSheetState.bottomSheetState.hide() }
+                    coroutineScope.launch { modalSheetState.bottomSheetState.hide() }
                 },
                 onSave = {
                     selectedDateRange.value = it
-                    scope.launch {
+                    coroutineScope.launch {
                         modalSheetState.bottomSheetState.hide()
                     }
                 }
@@ -153,7 +148,7 @@ fun CategoriesOverviewScreen(
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
-                ShowTopBar(modalSheetState = modalSheetState)
+                ShowTopBarWithCalendar(modalSheetState = modalSheetState, title = "Categories")
             },
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
@@ -165,7 +160,7 @@ fun CategoriesOverviewScreen(
                     contentPadding = PaddingValues(all = dimensions.contentMargin)
                 ) {
                     categorySpending.value.forEach { categorySpending ->
-                        item { Spacer(modifier = Modifier.height(dimensions.listSpacing)) }
+//                        item { Spacer(modifier = Modifier.height(dimensions.listSpacing)) }
                         item(
                             key = categorySpending.categoryName,
                             contentType = "overview"
@@ -177,7 +172,10 @@ fun CategoriesOverviewScreen(
                                 DetailsIconButton(
                                     boxScope = this,
                                 ) {
-                                    onCategoryDetailsClick.invoke(categorySpending.categoryName, selectedDateRange.value)
+                                    onCategoryDetailsClick.invoke(
+                                        categorySpending.categoryName,
+                                        selectedDateRange.value
+                                    )
                                 }
                                 Column {
                                     Text(
@@ -213,12 +211,13 @@ fun CategoriesOverviewScreen(
 }
 
 @Composable
-private fun ShowTopBar(
-    modalSheetState: BottomSheetScaffoldState
+fun ShowTopBarWithCalendar(
+    modalSheetState: BottomSheetScaffoldState,
+    title: String
 ) {
     val coroutineScope = rememberCoroutineScope()
     AppBarWithOptions(
-        title = "Categories",
+        title = title,
         actions = {
             TopAppBarActionButton(
                 painterResource(resource = Res.drawable.calendar_month_outline),

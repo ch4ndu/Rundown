@@ -3,8 +3,8 @@ package domain.model
 data class CategorySpending(
     val categoryName: String,
     val expenseIncomeData: List<ExpenseIncomeData>,
-    val expenseSum: Float,
-    val incomeSum: Float
+    val totalExpenseSum: Float,
+    val totalIncomeSum: Float
 ) {
 
 //    fun getDisplayOverView(): AnnotatedString {

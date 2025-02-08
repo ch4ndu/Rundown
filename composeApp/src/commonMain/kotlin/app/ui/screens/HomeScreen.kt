@@ -50,8 +50,8 @@ fun HomeScreen(
     onDailySummaryClick: () -> Unit
 ) {
 
-    // DailySummary(last 7 days - expenses)
-    // cashFlow(stacked barChart with expenses and income for last 3 months)
+    // DailySummary(last 7 days - expenses) - done
+    // cashFlow(stacked barChart with expenses and income for last 3 months) - done
 
     // budgetOverview for last 3 months(barChart with spent and remaining)
     // AccountsOverview for last 3 months(LineChart with selectable account chips)

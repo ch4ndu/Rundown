@@ -381,20 +381,20 @@ object MockData {
     val categorySpendingList = listOf(
         CategorySpending(
             categoryName = "Shopping",
-            expenseSum = 300f,
-            incomeSum = 500f,
+            totalExpenseSum = 300f,
+            totalIncomeSum = 500f,
             expenseIncomeData = mockExpenseIncomeList
         ),
         CategorySpending(
             categoryName = "Groceries",
-            expenseSum = 300f,
-            incomeSum = 500f,
+            totalExpenseSum = 300f,
+            totalIncomeSum = 500f,
             expenseIncomeData = mockExpenseIncomeList
         ),
         CategorySpending(
             categoryName = "Car",
-            expenseSum = 300f,
-            incomeSum = 500f,
+            totalExpenseSum = 300f,
+            totalIncomeSum = 500f,
             expenseIncomeData = mockExpenseIncomeList
         ),
     )

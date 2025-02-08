@@ -1,8 +1,8 @@
 package app.ui.chartutils
 
-import com.patrykandpatrick.vico.core.cartesian.axis.AxisPosition
+import com.patrykandpatrick.vico.core.cartesian.CartesianMeasuringContext
+import com.patrykandpatrick.vico.core.cartesian.axis.Axis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.ChartValues
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
 import kotlinx.datetime.LocalDateTime
@@ -13,13 +13,12 @@ import kotlinx.datetime.format.DateTimeFormat
 class SpendingDataBottomAxisFormatter(
     private val entries: List<Any>,
     private val dateTimeFormatter: DateTimeFormat<LocalDateTime>
-) :
-    CartesianValueFormatter {
+) : CartesianValueFormatter {
 
     override fun format(
-        value: Float,
-        chartValues: ChartValues,
-        verticalAxisPosition: AxisPosition.Vertical?
+        context: CartesianMeasuringContext,
+        value: Double,
+        verticalAxisPosition: Axis.Position.Vertical?
     ): CharSequence {
         if (entries.isNotEmpty()) {
             val entry = entries.getOrNull(value.toInt())
@@ -28,8 +27,8 @@ class SpendingDataBottomAxisFormatter(
             } else if (entry is ExpenseData) {
                 return entry.date.format(dateTimeFormatter)
             }
-            return ""
+            return "unknown"
         }
-        return ""
+        return "unknown"
     }
 }

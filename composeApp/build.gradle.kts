@@ -25,12 +25,13 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+//    jvm("desktop")
 
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
+//        macosX64("macos")
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -61,7 +62,7 @@ kotlin {
 //    }
 
     sourceSets {
-        val desktopMain by getting
+//        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.runtime)
@@ -71,7 +72,9 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.room.paging)
             implementation(libs.androidx.paging.runtime)
+            implementation(libs.androidx.paging.runtime.ktx)
             implementation(libs.androidx.paging.compose.android)
+            implementation(libs.paging.compose)
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.okhttp)
@@ -91,6 +94,8 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation("androidx.paging:paging-common:3.3.5")
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -103,11 +108,12 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
 //            implementation(libs.skie.annotations)
-            implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.room.paging)
-//            implementation(libs.androidx.paging.compose)
-            implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.androidx.room.paging)
+            implementation(libs.androidx.room.runtime)
+//            implementation(libs.androidx.paging.common)
+//            implementation(libs.paging.compose)
+
             implementation(libs.kotlinx.atomicfu)
             api(libs.androidx.datastore.preferences.core)
             api(libs.androidx.datastore.core.okio)
@@ -141,16 +147,14 @@ kotlin {
             implementation(libs.ktor.client.darwin)
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.room.paging)
+//            implementation(libs.androidx.paging.compose)
             implementation(libs.androidx.room.runtime)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.room.paging)
-        }
-//        commonTest.dependencies {
-//            implementation(libs.kotlin.test)
+//        desktopMain.dependencies {
+//            implementation(compose.desktop.currentOs)
+//            implementation(libs.ktor.client.okhttp)
+//            implementation(libs.androidx.paging.common)
+//            implementation(libs.androidx.room.paging)
 //        }
     }
 }
@@ -168,7 +172,7 @@ dependencies {
 }
 
 android {
-    namespace = "org.udnahc.firefly"
+    namespace = "com.udnahc.firefly"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -176,7 +180,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "org.udnahc.firefly"
+        applicationId = "org.udnahc.firefly.dev"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -242,17 +246,17 @@ ksp {
     arg("room.schemaLocation", "${projectDir}/schemas")
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.udnahc.firefly"
-            packageVersion = "1.0.0"
-        }
-    }
-}
+//compose.desktop {
+//    application {
+//        mainClass = "MainKt"
+//
+//        nativeDistributions {
+//            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+//            packageName = "org.udnahc.firefly"
+//            packageVersion = "1.0.0"
+//        }
+//    }
+//}
 
 swiftklib {
     create("piechart") {

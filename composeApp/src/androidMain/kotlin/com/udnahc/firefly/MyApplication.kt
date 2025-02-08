@@ -1,4 +1,4 @@
-package org.udnahc.firefly
+package com.udnahc.firefly
 
 import android.app.Application
 import di.dispatcherProvider
@@ -28,6 +28,6 @@ class MyApplication : Application() {
 //        } else {
 //            KmLogging.setLoggers(PlatformLogger(VariableLogLevel(LogLevel.Warn)))
 //        }
-        DailySyncWorker.scheduleDailySync(this)
+            DailySyncWorker.scheduleDailySync(this)
     }
 }
