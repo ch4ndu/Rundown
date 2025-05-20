@@ -13,9 +13,9 @@ import data.enums.ExpenseType
 actual fun PieChart(
     modifier: Modifier,
     pieEntriesMap: Map<String, Double>,
-//    tagTotal: MutableState<Double>,
+    tagTotal: MutableState<Double>,
     setActiveTag: (String) -> Unit,
-//    types: List<ExpenseType>
+    types: List<ExpenseType>
 ) {
     Box(modifier = modifier) {
         Text("Not Implemented Yet!", modifier = Modifier.align(Alignment.Center))

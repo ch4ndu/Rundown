@@ -32,8 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.ui.AppBarWithOptions
 import app.ui.ThemedCard
@@ -41,6 +39,7 @@ import app.ui.TopAppBarActionButton
 import app.ui.TopAppBarIcon
 import app.ui.getTextColorForAmount
 import app.viewmodel.AccountsViewModel
+import collectAsStateWithLifecycle
 import domain.repository.ConnectivityStateManager
 import domain.repository.HealthCheck
 import fireflycomposemultiplatform.composeapp.generated.resources.Res
@@ -63,11 +62,11 @@ fun AccountsScreen(
     val accountItemsList =
         accountsViewModel.accountList.collectAsStateWithLifecycle(initialValue = null)
 
+
     val listState = rememberLazyListState()
     val dimensions = FireflyAppTheme.dimensions
     val isConnectedToServer by connectivityStateManager.isConnectedToServer.collectAsStateWithLifecycle(
-        initialValue = HealthCheck.Unknown,
-        minActiveState = Lifecycle.State.RESUMED
+        initialValue = HealthCheck.Unknown
     )
     log.d { "isConnectedToServer:$isConnectedToServer" }
     val connectedTint by remember(isConnectedToServer) {

@@ -39,5 +39,5 @@ open class BudgetListOverviewViewModel(
                     dateRange = dateRange,
                     coroutineScope = viewModelScope
                 )
-            }
+            }.toStateFlow(initial = emptyList())
 }

@@ -1,33 +1,37 @@
 [versions]
-agp = "8.4.2"
+agp = "8.9.3"
 android-compileSdk = "35"
 android-minSdk = "28"
 android-targetSdk = "35"
-androidx-activityCompose = "1.10.0"
-androidx-paging = "3.3.5"
-atomicfu = "0.26.1"
-compose-plugin = "1.7.3"
+androidx-activityCompose = "1.10.1"
+androidx-paging = "3.3.6"
+atomicfu = "0.27.0"
+compose-plugin = "1.8.0"
 dataStoreVersion = "1.1.2"
-kotlin_version = "2.1.0"
-ksp = "2.1.0-1.0.29"
+kotlin_version = "2.1.20"
+ksp = "2.1.20-1.0.31"
+#kotlin_version = "2.1.21"
+#ksp = "2.1.21-2.0.1"
 kotlinx-coroutines = "1.10.1"
-kotlin_serialization_version = '1.7.3'
-kotlinxDatetime = "0.6.1"
-ktorVersion = "3.0.1"
-ktorfitVersion = "2.2.0"
-androidx-room = "2.7.0-alpha13"
-sqlite = "2.5.0-alpha13"
+kotlin_serialization_version = '1.8.0'
+kotlinxDatetime = "0.6.2"
+ktorVersion = "3.1.2"
+ktorfitVersion = "2.5.2"
+androidx-room = "2.7.1"
+sqlite = "2.5.1"
 
-koin = "4.0.0"
-koinComposeMultiplatform = "4.0.0"
+koin = "4.0.4"
+koinComposeMultiplatform = "4.0.4"
 navigationCompose = "2.8.0-alpha10"
+#navigationCompose = "2.9.0-beta01"
 lifecycleViewModel = "2.8.7"
 kmlog = "1.5.0"
 
 mpandroidchart = "v3.1.0"
-vico-android = "2.0.1"
-vico-multiplatform = "2.0.1"
-work_version = "2.10.0"
+vico-android = "2.1.2"
+vico-multiplatform = "2.1.2"
+
+work_version = "2.10.1"
 
 
 [libraries]
@@ -41,6 +45,7 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinComposeMultiplatform" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeMultiplatform" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+#navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewModel" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewModel" }
 
@@ -48,11 +53,11 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStoreVersion" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "dataStoreVersion" }
 
-androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" } # android only
-androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
-androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "androidx-paging" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
+#androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "androidx-paging" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidx-room" }
 

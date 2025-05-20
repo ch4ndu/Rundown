@@ -67,12 +67,13 @@ open class AccountChartsViewModel(
             )
         }
     }.flowOn(dispatcherProvider.default)
+        .toStateFlow(initial = null)
 
     val lineDataSetFlowVico =
         chartDataFlow.flatMapLatest { chartData ->
             flowOf(chartData?.expenseDataList)
 //            getBalanceChartDataUseCase.accountLineChartDataVico(chartData)
-        }
+        }.toStateFlow(initial = null)
 
 //    val vicoLineFormatterFlow = chartDataFlow.flatMapLatest { chartData ->
 //        val entries = chartData?.expenseDataList ?: emptyList()
@@ -81,9 +82,9 @@ open class AccountChartsViewModel(
 
     open val spendingDataFlow = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
         getOverallSpendingUseCase.getOverallSpendingForAccountByMonth(dateRange, accountId.toLong())
-    }.flowOn(dispatcherProvider.default)
+    }.flowOn(dispatcherProvider.default).toStateFlow(initial = emptyList())
 
     open val cashFlowData = combine(dateRangeFlow, accountIdFlow) { dateRange, accountId ->
         getCashFlowUseCase.getAccountCashFlowForDateRange(dateRange, accountId.toLong())
-    }.flowOn(dispatcherProvider.default)
+    }.flowOn(dispatcherProvider.default).toStateFlow(initial = emptyList())
 }

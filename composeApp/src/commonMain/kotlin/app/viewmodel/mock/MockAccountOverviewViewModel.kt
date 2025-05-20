@@ -9,6 +9,7 @@ import di.DispatcherProvider
 import domain.repository.TransactionRepository
 import domain.usecase.SyncWithServerUseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.LocalDateTime
 
@@ -28,7 +29,7 @@ class MockAccountOverviewViewModel(
 
     override val topTransactionsFlow = flow {
         emit(MockData.mockTransactions)
-    }
+    }.toStateFlow(initial = emptyList())
 
     override fun refreshRemoteData() {
         //Do Nothing
@@ -40,7 +41,7 @@ class MockAccountOverviewViewModel(
         )
     }
 
-    override val tagSummaryAccount: Flow<HashMap<String, TotalsSummary>> = flow {
+    override val tagSummaryAccount: StateFlow<HashMap<String, TotalsSummary>> = flow {
         emit(
             hashMapOf(
                 Pair(
@@ -61,12 +62,14 @@ class MockAccountOverviewViewModel(
                 )
             )
         )
-    }
+    }.toStateFlow(initial = HashMap<String, TotalsSummary>())
 
-    override val transactionsForActiveTag: Flow<List<FireFlyTransaction>> = topTransactionsFlow
-    override val categoriesForAccountWithDate: Flow<List<String>> = tagsForAccountWithDate
-    override val categorySummaryAccount: Flow<HashMap<String, TotalsSummary>> = tagSummaryAccount
-    override val transactionsForActiveCategory: Flow<List<FireFlyTransaction>> =
+    override val transactionsForActiveTag: StateFlow<List<FireFlyTransaction>> = topTransactionsFlow
+    override val categoriesForAccountWithDate: StateFlow<List<String>> =
+        tagsForAccountWithDate.toStateFlow(initial = emptyList())
+    override val categorySummaryAccount: StateFlow<HashMap<String, TotalsSummary>> =
+        tagSummaryAccount
+    override val transactionsForActiveCategory: StateFlow<List<FireFlyTransaction>> =
         transactionsForActiveTag
 
     override fun getNewTransactionListForAccount(
@@ -74,7 +77,7 @@ class MockAccountOverviewViewModel(
         accountId: Long,
         startDate: LocalDateTime,
         endDate: LocalDateTime
-    ): Flow<List<FireFlyTransaction>> {
+    ): StateFlow<List<FireFlyTransaction>> {
         return transactionsForActiveTag
     }
 }

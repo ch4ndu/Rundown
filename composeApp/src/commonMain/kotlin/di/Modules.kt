@@ -1,5 +1,7 @@
 package di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.SavedStateHandle
 import data.AppPref
 import data.database.AppDatabase
@@ -44,8 +46,12 @@ import domain.usecase.GetCashFlowUseCase
 import domain.usecase.GetCategorySpendingUseCase
 import domain.usecase.GetOverallSpendingUseCase
 import domain.usecase.SyncWithServerUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
 import org.koin.core.module.Module
+import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 expect val platformModule: Module
@@ -53,6 +59,16 @@ expect val platformModule: Module
 expect val viewModelModule: Module
 
 expect val mockViewModelModule: Module
+
+val dispatcherProvider = module {
+    single<DispatcherProvider> {
+        DefaultDispatcherProvider()
+    }
+    single<CoroutineScope> {
+        val dispatcherProvider: DispatcherProvider = get()
+        CoroutineScope(SupervisorJob() + dispatcherProvider.default)
+    }
+}
 
 val networkModule = module {
     factory<UserInfo> {
@@ -116,3 +132,5 @@ val sharedModule = module {
     single { SyncWithServerUseCase(get(), get(), get(), get(), get(), get()) }
     //end domain modules
 }
+
+val allModules = listOf(dispatcherProvider, sharedModule, platformModule, networkModule, viewModelModule)

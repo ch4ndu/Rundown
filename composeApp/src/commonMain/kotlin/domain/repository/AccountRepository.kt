@@ -32,6 +32,10 @@ class AccountRepository(
         return accountDao.getAccountsByType(accountType)
     }
 
+    fun getAccountListPaging(accountType: String): PagingSource<Int, AccountData> {
+        return accountDao.getAccountsByTypePaging(accountType)
+    }
+
     suspend fun loadAccountDataFromNetwork(accountType: String) {
         withContext(dispatcherProvider.default) {
             var loadData = true

@@ -7,6 +7,7 @@ import domain.model.CategorySpending
 import domain.repository.TransactionRepository
 import domain.usecase.GetCategorySpendingUseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 
 class MockCategoriesOverviewViewModel(
@@ -18,6 +19,6 @@ class MockCategoriesOverviewViewModel(
     transactionRepository, getCategorySpendingUseCase, dispatcherProvider, fireFlyTransactionDataDao
 ) {
 
-    override val allCategoriesSpending: Flow<List<CategorySpending>>
-        get() = flow { emit(MockData.categorySpendingList) }
+    override val allCategoriesSpending: StateFlow<List<CategorySpending>>
+        get() = flow { emit(MockData.categorySpendingList) }.toStateFlow(initial = emptyList())
 }

@@ -118,7 +118,6 @@ internal fun rememberSpendingDataMarker(
             guideline = guideline,
             indicatorSizeDp = 36f,
             valueFormatter = MarkerLabelFormatter(
-                decimalFormat = amountDecimalFormat,
                 spendingDataList = spendingDataList,
                 showSpendingLabel = showSpendingLabel,
                 dateTimeFormatter = dateTimeFormatter
@@ -140,7 +139,9 @@ internal fun rememberSpendingDataMarker(
                         LabelPosition.AbovePoint -> topMargin += label.getHeight(context) + tickSizeDp.pixels
                         LabelPosition.Bottom,
 //                        LabelPosition.BelowPoint -> bottomMargin += label.getHeight(context) + tickSizeDp.pixels
-                        LabelPosition.AroundPoint -> {}
+                        LabelPosition.AroundPoint,
+
+                        LabelPosition.BelowPoint -> {}
                     }
                     layerMargins.ensureValuesAtLeast(top = topMargin, bottom = bottomMargin)
                 }

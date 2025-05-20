@@ -70,6 +70,6 @@ open class CategoriesOverviewViewModel(
                     )
                 }
             }
-        }.flowOn(dispatcherProvider.default)
+        }.flowOn(dispatcherProvider.default).toStateFlow(initial = emptyList())
     }
 }

@@ -56,4 +56,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userInfoDao(): UserInfoDao
 }
 
+@Suppress("NO_ACTUAL_FOR_EXPECT", "KotlinNoActualForExpect")
 public expect object AppDatabaseCtor : RoomDatabaseConstructor<AppDatabase>

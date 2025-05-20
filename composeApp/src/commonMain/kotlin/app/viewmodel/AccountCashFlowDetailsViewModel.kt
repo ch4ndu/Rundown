@@ -71,7 +71,7 @@ open class AccountCashFlowDetailsViewModel(
         log.d { "startDate:${dateRange.startDate.format(DateSerializer.chartDayMonthYearFormat)}" }
         log.d { "endDate:${dateRange.endDate.format(DateSerializer.chartDayMonthYearFormat)}" }
         getCashFlowUseCase.getAccountCashFlowForDateRange(dateRange, accountId)
-    }
+    }.toStateFlow(initial = emptyList())
 
     open val transactionsFlow = combine(
         selectedTypeFlow,
@@ -94,4 +94,5 @@ open class AccountCashFlowDetailsViewModel(
 //            transactionRepository.getCashFlowIncomesForAccount(range, accountId)
 //        }
     }.flowOn(dispatcherProvider.io)
+        .toStateFlow(initial = emptyList())
 }

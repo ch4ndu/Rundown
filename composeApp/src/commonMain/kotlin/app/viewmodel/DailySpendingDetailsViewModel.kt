@@ -27,6 +27,7 @@ open class DailySpendingDetailsViewModel(
 
     open val dailySpendingFlow =
         getOverallSpendingUseCase.getOverallSpendingByDay(currentDate(), 30)
+            .toStateFlow(initial = emptyList())
 
     open val transactionsForSelectedExpenseData =
         accountRepository.getAssetAccountListFlow().flatMapLatest { accountList ->
@@ -40,6 +41,7 @@ open class DailySpendingDetailsViewModel(
                 )
             }
         }.flowOn(dispatcherProvider.io)
+            .toStateFlow(initial = emptyList())
 
     fun updateSelectedExpenseData(expenseData: ExpenseData) {
         dailyExpenseDataSelected.value = expenseData

@@ -51,7 +51,7 @@ open class HomeViewModel(
 
     val dailySpendingAverage = dailySpendingFlow.map { spendingData ->
         spendingData.map { it.expenseAmount }.average()
-    }
+    }.toStateFlow(initial = null)
 
     open val cashFlowDetails = getCashFlowUseCase.getCashFlowForDateRange(
         DateRange(
@@ -64,7 +64,7 @@ open class HomeViewModel(
         val expenseAverage = cashFlowdata.map { it.expenseAmount }.average()
         val incomeAverage = cashFlowdata.map { it.incomeAmount }.average()
         hashMapOf(Pair("expense", expenseAverage), Pair("income", incomeAverage))
-    }
+    }.toStateFlow(initial = hashMapOf<String, Double>())
 
     open val netWorthLineDataSetFlow =
         netWorthChartDataFlow.flatMapLatest { groupedExpenseData ->

@@ -10,7 +10,7 @@ import domain.model.ExpenseIncomeData
 import domain.repository.TransactionRepository
 import domain.usecase.GetCashFlowUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 
 class MockAccountCashFlowDetailsViewModel(
@@ -25,13 +25,13 @@ class MockAccountCashFlowDetailsViewModel(
     savedStateHandle
 ) {
 
-    override val cashFlowData: Flow<List<ExpenseIncomeData>>
+    override val cashFlowData: StateFlow<List<ExpenseIncomeData>>
         get() = dateRangeFlow.mapLatest {
             return@mapLatest MockData.mockExpenseIncomeList
-        }
+        }.toStateFlow(initial = emptyList())
 
-    override val transactionsFlow: Flow<List<FireFlyTransaction>>
+    override val transactionsFlow: StateFlow<List<FireFlyTransaction>>
         get() = dateRangeFlow.mapLatest {
             return@mapLatest MockData.mockTransactions.shuffled()
-        }
+        }.toStateFlow(initial = emptyList())
 }

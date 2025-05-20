@@ -1,6 +1,5 @@
 package app.viewmodel.mock
 
-import androidx.lifecycle.viewModelScope
 import app.viewmodel.AccountsViewModel
 import data.AppPref
 import data.database.model.accounts.AccountAttributes
@@ -10,10 +9,8 @@ import di.DispatcherProvider
 import domain.currentDate
 import domain.repository.AccountRepository
 import domain.usecase.SyncWithServerUseCase
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.datetime.format
 
 class MockAccountsViewModel(
@@ -76,16 +73,12 @@ class MockAccountsViewModel(
                 )
             )
         )
-    }.flowOn(dispatcherProvider.default)
+    }.flowOn(dispatcherProvider.default).toStateFlow(initial = emptyList())
 
     override val lastSyncedAt =
         flow { emit(currentDate().format(DateSerializer.displayFormat)) }
         .flowOn(dispatcherProvider.io)
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            replay = 1
-        )
+            .toStateFlow(initial = "")
 
     override fun refreshData() {
 

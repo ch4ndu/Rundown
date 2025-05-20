@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package data.network
 
 import de.jensklingenberg.ktorfit.Ktorfit

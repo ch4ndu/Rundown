@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalForeignApi::class)
-
 package app.ui
 
 import androidx.compose.foundation.layout.Box
@@ -30,7 +28,7 @@ import platform.UIKit.UIViewController
 private val log = logging()
 
 @Composable
-actual fun BarChart(
+actual fun BarChartNative(
     modifier: Modifier,
     dataList: List<Any>,
     showPersistedMarkers: Boolean,

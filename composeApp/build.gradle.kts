@@ -22,16 +22,16 @@ kotlin {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_18)
+//            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
-//    jvm("desktop")
+    jvm("desktop")
 
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64(),
-//        macosX64("macos")
+        iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -62,7 +62,7 @@ kotlin {
 //    }
 
     sourceSets {
-//        val desktopMain by getting
+        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.runtime)
@@ -73,7 +73,7 @@ kotlin {
             implementation(libs.androidx.room.paging)
             implementation(libs.androidx.paging.runtime)
             implementation(libs.androidx.paging.runtime.ktx)
-            implementation(libs.androidx.paging.compose.android)
+//            implementation(libs.androidx.paging.compose.android)
             implementation(libs.paging.compose)
 
             implementation(libs.ktor.client.okhttp)
@@ -94,7 +94,7 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation("androidx.paging:paging-common:3.3.5")
+//            implementation("androidx.paging:paging-common:3.3.5")
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -111,6 +111,7 @@ kotlin {
             implementation(libs.sqlite.bundled)
             implementation(libs.androidx.room.paging)
             implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.paging.common)
 //            implementation(libs.androidx.paging.common)
 //            implementation(libs.paging.compose)
 
@@ -139,6 +140,8 @@ kotlin {
             implementation(libs.stately.common)
 
             implementation(libs.androidx.datastore.preferences.core)
+
+            implementation(libs.vico.multiplatform)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -150,19 +153,20 @@ kotlin {
 //            implementation(libs.androidx.paging.compose)
             implementation(libs.androidx.room.runtime)
         }
-//        desktopMain.dependencies {
-//            implementation(compose.desktop.currentOs)
-//            implementation(libs.ktor.client.okhttp)
-//            implementation(libs.androidx.paging.common)
-//            implementation(libs.androidx.room.paging)
-//        }
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.androidx.room.compiler)
+            implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.room.paging)
+        }
     }
 }
 
 dependencies {
     listOf(
         "kspAndroid",
-        // "kspJvm",
+        "kspDesktop",
         "kspIosSimulatorArm64",
         "kspIosX64",
         "kspIosArm64"
@@ -246,17 +250,17 @@ ksp {
     arg("room.schemaLocation", "${projectDir}/schemas")
 }
 
-//compose.desktop {
-//    application {
-//        mainClass = "MainKt"
-//
-//        nativeDistributions {
-//            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-//            packageName = "org.udnahc.firefly"
-//            packageVersion = "1.0.0"
-//        }
-//    }
-//}
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "org.udnahc.firefly"
+            packageVersion = "1.0.0"
+        }
+    }
+}
 
 swiftklib {
     create("piechart") {

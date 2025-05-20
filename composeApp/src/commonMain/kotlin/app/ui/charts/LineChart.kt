@@ -1,33 +1,31 @@
-package app.ui
+package app.ui.charts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.unit.dp
 import app.theme.FireflyAppTheme
 import app.theme.HaloBlue
-import app.ui.chartutils.VicoLineBottomAxisFormatter
-import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
-import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.core.cartesian.Zoom
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
+import app.ui.charts.chartutils.VicoLineBottomAxisFormatter
+import com.patrykandpatrick.vico.multiplatform.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.multiplatform.cartesian.Zoom
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.rememberAxisLabelComponent
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianLayerRangeProvider
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.multiplatform.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberLine
+import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.multiplatform.common.fill
 import domain.model.ExpenseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,20 +33,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.DateTimeFormat
 import kotlin.math.roundToInt
 
-@Composable
-actual fun LineChartNative(
-    modifier: Modifier,
-    chartDataList: List<ExpenseData>?,
-    dateTimeFormatter: DateTimeFormat<LocalDateTime>
-) {
-    if (chartDataList != null ) {
-        VicoLineChart(
-            modifier = modifier,
-            chartDataList = chartDataList,
-            dateTimeFormatter = dateTimeFormatter
-        )
-    }
-}
 
 @Composable
 fun VicoLineChart(
@@ -75,7 +59,10 @@ fun VicoLineChart(
             shiftExtremeLines = true,
             addExtremeLabelPadding = true
         ),
-        label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize)
+        label = rememberAxisLabelComponent(
+            style = FireflyAppTheme.typography.labelMedium
+                .copy(color = FireflyAppTheme.colorScheme.onSurface)
+        )
     )
     val startAxisFormatter = CartesianValueFormatter { _, value, _ ->
         "${value.roundToInt()}"
@@ -84,7 +71,10 @@ fun VicoLineChart(
         valueFormatter = startAxisFormatter,
         tick = null,
         itemPlacer = VerticalAxis.ItemPlacer.count(count = { 5 }),
-        label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize),
+        label = rememberAxisLabelComponent(
+            style = FireflyAppTheme.typography.labelMedium
+                .copy(color = FireflyAppTheme.colorScheme.onSurface)
+        ),
     )
     val modelProducer = remember { CartesianChartModelProducer() }
     LaunchedEffect(chartDataList.size) {
@@ -109,14 +99,21 @@ fun VicoLineChart(
                     LineCartesianLayer.rememberLine(
                         fill = LineCartesianLayer.LineFill.single(fill(chartLineColor.copy(0.8f))),
                         areaFill =
-                        LineCartesianLayer.AreaFill.single(
-                            fill(
-                                ShaderProvider.verticalGradient(
-                                chartLineColor.copy(0.8f).toArgb(),
-                                    chartLineColor.copy(0.5f).toArgb()
+                            LineCartesianLayer.AreaFill.single(
+                                fill(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            chartLineColor.copy(0.8f),
+                                            chartLineColor.copy(0.5f)
+                                        ),
+                                        tileMode = TileMode.Clamp
+                                    )
+//                                    ShaderProvider.verticalGradient(
+//                                        chartLineColor.copy(0.8f).toArgb(),
+//                                        chartLineColor.copy(0.5f).toArgb()
+//                                    )
                                 )
                             )
-                        )
                     ),
                     LineCartesianLayer.rememberLine(
                         LineCartesianLayer.LineFill.single(

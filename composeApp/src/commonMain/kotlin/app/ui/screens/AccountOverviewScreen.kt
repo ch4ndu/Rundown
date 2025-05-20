@@ -63,7 +63,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.model.TotalsSummary
 import app.theme.DarkGrey
 import app.theme.FireflyAppTheme
@@ -79,6 +78,7 @@ import app.ui.isScrollingUp
 import app.ui.screenWidth
 import app.viewmodel.AccountChartsViewModel
 import app.viewmodel.AccountOverviewViewModel
+import collectAsStateWithLifecycle
 import data.database.model.transaction.FireFlyTransaction
 import data.enums.ExpenseType
 import domain.model.DateRange
@@ -191,7 +191,7 @@ fun AccountOverviewScreen(
             endDate = selectedDateRange.value.endDate
         )
     }
-    val transactionItems = lazyPagingItems.collectAsStateWithLifecycle(emptyList())
+    val transactionItems = lazyPagingItems.collectAsStateWithLifecycle(initialValue = emptyList())
     val dimensions = FireflyAppTheme.dimensions
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()

@@ -7,7 +7,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.lighthousegames.logging.logging
@@ -20,9 +22,14 @@ class ConnectivityStateManager(
     private val coroutineScope: CoroutineScope
 ) {
     private val log = logging()
+    private val _isConnectedToServer = MutableStateFlow<HealthCheck?>(HealthCheck.Unknown)
 
-    val isConnectedToServer =
-        MutableStateFlow<HealthCheck?>(HealthCheck.Unknown)
+    val isConnectedToServer = _isConnectedToServer
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(500),
+            initialValue = HealthCheck.Unknown
+        )
 
     private var monitorConnectivityJob: Job? = null
         set(value) {
@@ -53,7 +60,7 @@ class ConnectivityStateManager(
     private fun scheduleCheckServerConnection(): Job {
         return coroutineScope.async(dispatcherProvider.default) {
             while (isActive) {
-                isConnectedToServer.value = isConnectedToServer()
+                _isConnectedToServer.value = isConnectedToServer()
                 log.d { "isConnectedToServer-${isConnectedToServer.value}" }
                 delay(5 * 60_000)
             }

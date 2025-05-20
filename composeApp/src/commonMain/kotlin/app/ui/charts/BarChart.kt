@@ -1,6 +1,6 @@
-package app.ui
+package app.ui.charts
 
-import android.graphics.Typeface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -9,38 +9,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import app.model.MergeMode
 import app.theme.DeltaGekko
-import app.theme.FireflyAppTheme
 import app.theme.GrillRed
-import app.ui.chartutils.SpendingDataBottomAxisFormatter
-import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
-import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.insets
-import com.patrykandpatrick.vico.core.cartesian.Zoom
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
-import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibilityListener
-import com.patrykandpatrick.vico.core.cartesian.marker.ColumnCartesianLayerMarkerTarget
-import com.patrykandpatrick.vico.core.common.Fill
-import com.patrykandpatrick.vico.core.common.shape.CorneredShape
+import app.ui.charts.chartutils.SpendingDataBottomAxisFormatter
+import com.patrykandpatrick.vico.multiplatform.cartesian.CartesianChart
+import com.patrykandpatrick.vico.multiplatform.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.multiplatform.cartesian.Zoom
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.rememberAxisLabelComponent
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.multiplatform.cartesian.decoration.HorizontalLine
+import com.patrykandpatrick.vico.multiplatform.cartesian.layer.ColumnCartesianLayer
+import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.CartesianMarkerVisibilityListener
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.ColumnCartesianLayerMarkerTarget
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.multiplatform.common.Insets
+import com.patrykandpatrick.vico.multiplatform.common.component.rememberLineComponent
+import com.patrykandpatrick.vico.multiplatform.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.multiplatform.common.data.ExtraStore
+import com.patrykandpatrick.vico.multiplatform.common.fill
+import com.patrykandpatrick.vico.multiplatform.common.shape.CorneredShape
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
 import kotlinx.coroutines.Dispatchers
@@ -51,21 +49,20 @@ import org.lighthousegames.logging.logging
 import kotlin.math.roundToInt
 
 private val log = logging()
-/**
- * [dataList] accepts [ExpenseIncomeData] or [ExpenseData]
- */
+
+
 @Composable
-actual fun BarChartNative(
+fun BarChartKmm(
     modifier: Modifier,
     dataList: List<Any>,
     showPersistedMarkers: Boolean,
     mergeMode: MergeMode,
     horizontalLineValue: Float,
     dateTimeFormatter: DateTimeFormat<LocalDateTime>,
-    dataSelected: (Any) -> Unit
+    dataSelected: (Any) -> Unit,
 ) {
     val barChartMergeMode = remember(mergeMode) {
-        when(mergeMode) {
+        when (mergeMode) {
             MergeMode.Grouped -> ColumnCartesianLayer.MergeMode.Grouped()
             MergeMode.Stacked -> ColumnCartesianLayer.MergeMode.Stacked
         }
@@ -79,9 +76,18 @@ actual fun BarChartNative(
     val isLargeData = remember(dataList) {
         mutableStateOf(dataList.size > 15)
     }
+    val marker = rememberSpendingDataMarker(
+        spendingDataList = dataList,
+        dateTimeFormatter = dateTimeFormatter
+    )
 
-    val persistentMarkers = rememberSaveable(dataList) {
-        mutableStateOf(emptyMap<Float, CartesianMarker>())
+    val selectedXTarget = rememberSaveable { mutableStateOf<Double?>(null) }
+    // Based on selected X value, define a persistent marker
+    val persistentMarker = remember(selectedXTarget.value) {
+        val persistentMarkerScope: CartesianChart.PersistentMarkerScope.(ExtraStore) -> Unit = {
+            selectedXTarget.value?.let { marker at it }
+        }
+        persistentMarkerScope
     }
     val markerVisibilityChangeListener = remember(dataList) {
         object : CartesianMarkerVisibilityListener {
@@ -97,7 +103,7 @@ actual fun BarChartNative(
                 val selectedPosition = targets[0].x.toInt()
                 log.d { "onMarkerShown:selectedPosition $selectedPosition" }
                 log.d { "onMarkerShown:isSpendingData ${isSpendingData.value}" }
-                persistentMarkers.value = mapOf(targets[0].x.toFloat() to marker)
+                selectedXTarget.value = targets.firstOrNull()?.x
                 dataSelected.invoke(dataList[selectedPosition])
             }
 
@@ -108,14 +114,14 @@ actual fun BarChartNative(
                 log.d { "onUpdated:$targets" }
                 log.d { "onMarkerShown:isSpendingData ${isSpendingData.value}" }
                 val selectedPosition = targets[0].x.toInt()
-                persistentMarkers.value = mapOf(targets[0].x.toFloat() to marker)
+                selectedXTarget.value = targets.firstOrNull()?.x
                 dataSelected.invoke(dataList[selectedPosition])
                 val color =
                     (targets[0] as? ColumnCartesianLayerMarkerTarget)?.columns?.get(0)?.color
                 if (color != null) {
-                    if (color == DeltaGekko.toArgb()) {
+                    if (color == DeltaGekko) {
                         log.d { "color is green" }
-                    } else if (color == GrillRed.toArgb()) {
+                    } else if (color == GrillRed) {
                         log.d { "color is red" }
                     }
                 }
@@ -144,10 +150,6 @@ actual fun BarChartNative(
             }
         }
     }
-    val marker = rememberSpendingDataMarker(
-        spendingDataList = dataList,
-        dateTimeFormatter = dateTimeFormatter
-    )
     val scrollState = rememberVicoScrollState(scrollEnabled = isLargeData.value)
     val zoomState =
         rememberVicoZoomState(zoomEnabled = isLargeData.value, initialZoom = Zoom.Content)
@@ -165,7 +167,10 @@ actual fun BarChartNative(
         tick = null,
         guideline = null,
         itemPlacer = VerticalAxis.ItemPlacer.count(count = { 3 }),
-        label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize)
+        label = rememberAxisLabelComponent(
+            style = MaterialTheme.typography.labelMedium
+                .copy(color = MaterialTheme.colorScheme.onSurface),
+        )
     )
     val bottomAxis = HorizontalAxis.rememberBottom(
         guideline = null,
@@ -174,15 +179,18 @@ actual fun BarChartNative(
         itemPlacer = remember {
             HorizontalAxis.ItemPlacer.aligned(spacing = { 2 }, addExtremeLabelPadding = true)
         },
-        label = rememberAxisLabelComponent(textSize = FireflyAppTheme.typography.labelMedium.fontSize)
+        label = rememberAxisLabelComponent(
+            style = MaterialTheme.typography.labelMedium
+                .copy(color = MaterialTheme.colorScheme.onSurface)
+        )
     )
     val expenseLineComponent = rememberLineComponent(
-        fill = Fill(color = GrillRed.toArgb()),
+        fill = fill(color = GrillRed),
         thickness = 16.dp,
         shape = CorneredShape.rounded(allPercent = 40),
     )
     val incomeLineComponent = rememberLineComponent(
-        fill = Fill(color = DeltaGekko.toArgb()),
+        fill = fill(color = DeltaGekko),
         thickness = 16.dp,
         shape = CorneredShape.rounded(allPercent = 40),
     )
@@ -204,18 +212,18 @@ actual fun BarChartNative(
     }
     CartesianChartHost(
         chart =
-        rememberCartesianChart(
-            rememberColumnCartesianLayer(
-                columnProvider = columnSeries.value,
-                mergeMode = { barChartMergeMode }
+            rememberCartesianChart(
+                rememberColumnCartesianLayer(
+                    columnProvider = columnSeries.value,
+                    mergeMode = { barChartMergeMode }
+                ),
+                startAxis = startAxis,
+                bottomAxis = bottomAxis,
+                persistentMarkers = if (showPersistedMarkers) persistentMarker else null,
+                decorations = if (horizontalLineValue > 0f) listOf(horizontalLine) else emptyList(),
+                marker = marker,
+                markerVisibilityListener = markerVisibilityChangeListener
             ),
-            startAxis = startAxis,
-            bottomAxis = bottomAxis,
-            persistentMarkers = { if (showPersistedMarkers) persistentMarkers.value },
-            decorations = if (horizontalLineValue > 0f) listOf(horizontalLine) else emptyList(),
-            marker = marker,
-            markerVisibilityListener = markerVisibilityChangeListener
-        ),
         modelProducer = modelProducer,
         zoomState = zoomState,
         scrollState = scrollState,
@@ -229,17 +237,15 @@ private fun rememberComposeHorizontalLine(horizontalLine: Float): HorizontalLine
     val color = Color(-2893786)
     return HorizontalLine(
         y = { horizontalLine.toDouble() },
-        line = rememberLineComponent(fill = Fill(color.toArgb()), 2.dp),
+        line = rememberLineComponent(fill = fill(color), 2.dp),
         labelComponent =
-        rememberTextComponent(
-            background = rememberShapeComponent(
-                shape = CorneredShape.Pill,
-                fill = Fill(color = color.toArgb())
+            rememberTextComponent(
+                background = rememberShapeComponent(
+                    shape = CorneredShape.Pill,
+                    fill = fill(color = color)
+                ),
+                padding = Insets(8.dp, 2.dp),
+                margins = Insets(4.dp),
             ),
-            padding =
-            insets(8.dp, 2.dp),
-            margins = insets(4.dp),
-            typeface = Typeface.MONOSPACE,
-        ),
     )
 }

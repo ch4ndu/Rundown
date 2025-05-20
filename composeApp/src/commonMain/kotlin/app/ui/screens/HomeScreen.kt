@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.model.MergeMode
 import app.theme.FireflyAppTheme
 import app.theme.WalletLightGreen
@@ -35,6 +34,7 @@ import app.ui.ThemedBox
 import app.ui.getAspectRatio
 import app.ui.isLargeScreen
 import app.viewmodel.HomeViewModel
+import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseData
 import getDisplayWithCurrency
@@ -64,7 +64,7 @@ fun HomeScreen(
     val cashFlowDetails =
         homeViewModel.cashFlowDetails.collectAsStateWithLifecycle(initialValue = emptyList())
     val cashFlowAverages =
-        homeViewModel.cashFlowAverages.collectAsStateWithLifecycle(initialValue = hashMapOf())
+        homeViewModel.cashFlowAverages.collectAsStateWithLifecycle(initialValue = hashMapOf<String, Double>())
 
     val netWorthChartData = homeViewModel.netWorthChartDataFlow.collectAsStateWithLifecycle(
         initialValue = null

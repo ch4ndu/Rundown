@@ -10,7 +10,7 @@ import domain.repository.AccountRepository
 import domain.repository.TransactionRepository
 import domain.usecase.GetOverallSpendingUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 
@@ -26,10 +26,10 @@ class MockDailySpendingDetailsViewModel(
     dispatcherProvider
 ) {
 
-    override val dailySpendingFlow: Flow<List<ExpenseData>>
-        get() = flow { emit(MockData.mockExpenseList2) }
-    override val transactionsForSelectedExpenseData: Flow<List<FireFlyTransaction>>
+    override val dailySpendingFlow: StateFlow<List<ExpenseData>>
+        get() = flow { emit(MockData.mockExpenseList2) }.toStateFlow(initial = emptyList())
+    override val transactionsForSelectedExpenseData: StateFlow<List<FireFlyTransaction>>
         get() = dailyExpenseDataSelected.mapLatest {
             MockData.mockTransactions.shuffled()
-        }
+        }.toStateFlow(initial = emptyList())
 }

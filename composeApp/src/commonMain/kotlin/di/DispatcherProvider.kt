@@ -60,13 +60,3 @@ class DefaultDispatcherProvider : DispatcherProvider {
     override val io: CoroutineDispatcher = Dispatchers.IO
     override val nonCancellable: CoroutineContext = NonCancellable
 }
-
-val dispatcherProvider = module {
-    single<DispatcherProvider> {
-        DefaultDispatcherProvider()
-    }
-    single {
-        val dispatcherProvider: DispatcherProvider = get()
-        CoroutineScope(SupervisorJob() + dispatcherProvider.default)
-    }
-}

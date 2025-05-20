@@ -57,9 +57,9 @@ val serverViewModels = module {
 }
 
 actual val mockViewModelModule = module {
+    viewModelOf(::MockSyncWithServerViewModel) { bind<SyncWithServerViewModel>() }
     viewModelOf(::MockAuthViewModel) { bind<AuthViewModel>() }
     viewModelOf(::MockAccountsViewModel) { bind<AccountsViewModel>() }
-    viewModelOf(::MockSyncWithServerViewModel) { bind<SyncWithServerViewModel>() }
     viewModelOf(::MockAccountOverviewViewModel) { bind<AccountOverviewViewModel>() }
     viewModelOf(::MockAccountChartsViewModel) { bind<AccountChartsViewModel>() }
     viewModelOf(::MockAccountCashFlowDetailsViewModel) { bind<AccountCashFlowDetailsViewModel>() }
@@ -71,4 +71,3 @@ actual val mockViewModelModule = module {
 }
 
 actual val viewModelModule = serverViewModels
-//actual val viewModelModule = serverViewModels

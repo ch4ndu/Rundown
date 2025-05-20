@@ -18,8 +18,8 @@ abstract class AccountsDataDao : BaseDao<AccountData> {
     @Query("SELECT * FROM accounts WHERE type =:accountType ORDER BY id ASC")
     abstract fun getAccountsByType(accountType: String): Flow<List<AccountData>>
 
-//    @Query("SELECT * FROM accounts WHERE type =:accountType ORDER BY id ASC")
-//    abstract suspend fun getAccountsByTypee(accountType: String): PagingSource<Int, AccountData>
+    @Query("SELECT * FROM accounts WHERE type =:accountType ORDER BY id ASC")
+    abstract fun getAccountsByTypePaging(accountType: String): PagingSource<Int, AccountData>
 
     @Query("SELECT * FROM accounts WHERE type =:accountType ORDER BY id ASC")
     abstract fun getAccountsFlowByType(accountType: String): Flow<List<AccountData>>

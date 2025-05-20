@@ -46,11 +46,7 @@ private fun documentDirectory(): String {
         create = false,
         error = null,
     )
-    log.d { "currentDirectoryPath: ${NSFileManager.defaultManager.currentDirectoryPath}" }
-    log.d { "chandu: documentDirectory: ${documentDirectory?.path}" }
-    log.d { "applicationSupportDirectory: ${applicationSupportDirectory?.path}" }
     return requireNotNull(documentDirectory).path!!
-//    return requireNotNull(applicationSupportDirectory).path!!
 }
 
 fun getApplicationSupportDirectory(): String {

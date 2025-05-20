@@ -15,6 +15,7 @@ import domain.usecase.GetBalanceChartDataUseCase
 import domain.usecase.GetCashFlowUseCase
 import domain.usecase.GetOverallSpendingUseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 
 class MockAccountChartsViewModel(
@@ -34,7 +35,7 @@ class MockAccountChartsViewModel(
     accountRepository,
     savedStateHandle
 ) {
-    override val chartDataFlow: Flow<GroupedExpenseData?>
+    override val chartDataFlow: StateFlow<GroupedExpenseData?>
         get() = flow {
             emit(
                 GroupedExpenseData(
@@ -43,15 +44,15 @@ class MockAccountChartsViewModel(
                     expenseDataList = MockData.mockExpenseList2
                 )
             )
-        }
+        }.toStateFlow(initial = null)
 
-    override val spendingDataFlow: Flow<List<ExpenseData>>
+    override val spendingDataFlow: StateFlow<List<ExpenseData>>
         get() = flow {
             emit(MockData.mockExpenseList.shuffled())
-        }
+        }.toStateFlow(initial = emptyList())
 
-    override val cashFlowData: Flow<List<ExpenseIncomeData>>
+    override val cashFlowData: StateFlow<List<ExpenseIncomeData>>
         get() = flow {
             emit(MockData.mockExpenseIncomeList)
-        }
+        }.toStateFlow(initial = emptyList())
 }

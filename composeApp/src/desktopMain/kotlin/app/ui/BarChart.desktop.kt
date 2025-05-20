@@ -13,7 +13,7 @@ import kotlinx.datetime.format.DateTimeFormat
  * [dataList] accepts [ExpenseIncomeData] or [ExpenseData]
  */
 @Composable
-actual fun BarChart(
+actual fun BarChartNative(
     modifier: Modifier,
     dataList: List<Any>,
     showPersistedMarkers: Boolean,

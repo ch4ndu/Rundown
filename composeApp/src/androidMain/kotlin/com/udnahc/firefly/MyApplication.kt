@@ -1,6 +1,7 @@
 package com.udnahc.firefly
 
 import android.app.Application
+import di.allModules
 import di.dispatcherProvider
 import di.initKoin
 import di.networkModule
@@ -19,7 +20,7 @@ class MyApplication : Application() {
         super.onCreate()
         initKoin {
             androidContext(this@MyApplication)
-            modules(dispatcherProvider, sharedModule, platformModule, networkModule, viewModelModule)
+            modules(allModules)
             workManagerFactory()
         }
 

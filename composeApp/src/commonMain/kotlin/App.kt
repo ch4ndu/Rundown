@@ -29,7 +29,6 @@ import app.ui.screens.FirstSyncScreen
 import app.viewmodel.AuthViewModel
 import di.networkModule
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI

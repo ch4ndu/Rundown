@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class)
 
 package app.viewmodel
 
@@ -54,7 +54,7 @@ open class CategoryDetailsViewModel(
         selectedCategory.value = category
     }
 
-    val categorySpending = selectedCategory.filterNot { it.isEmpty() }.flatMapLatest { category ->
+    open val categorySpending = selectedCategory.filterNot { it.isEmpty() }.flatMapLatest { category ->
         allCategoriesSpending.flatMapLatest { categorySpendingList ->
             flowOf(
                 categorySpendingList.find { it.categoryName == category }
@@ -62,6 +62,7 @@ open class CategoryDetailsViewModel(
         }
     }.distinctUntilChanged()
         .flowOn(dispatcherProvider.io)
+        .toStateFlow(initial = null)
 
     open val transactionsForCategory =
         spendingDateSelected.filterNotNull().flatMapLatest { spendingData ->
@@ -74,8 +75,9 @@ open class CategoryDetailsViewModel(
                 categoryName
             )
         }.flowOn(dispatcherProvider.io)
+            .toStateFlow(initial = emptyList())
 
-    fun updateSelectedSpendingData(expenseIncomeData: ExpenseIncomeData) {
+    open fun updateSelectedSpendingData(expenseIncomeData: ExpenseIncomeData) {
         spendingDateSelected.value = expenseIncomeData
     }
 }

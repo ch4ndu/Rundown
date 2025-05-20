@@ -38,7 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.ui.AppBarWithOptions
 import app.ui.BarChart
@@ -50,6 +49,7 @@ import app.ui.getAspectRatio
 import app.ui.getDisplayOverView
 import app.ui.isLargeScreen
 import app.viewmodel.CategoriesOverviewViewModel
+import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
 import domain.atBeginningOfMonth
 import domain.currentDate

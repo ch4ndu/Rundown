@@ -17,11 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.viewmodel.SyncState
 import app.viewmodel.SyncWithServerViewModel
-import kotlinx.coroutines.flow.distinctUntilChanged
+import collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -31,8 +30,8 @@ fun FirstSyncScreen(
     onSyncComplete: () -> Unit
 ) {
     val syncStatus by syncWithServerViewModel.syncStatus
-        .distinctUntilChanged { old, new -> old == new }
-        .collectAsStateWithLifecycle(SyncState.IDLE)
+//        .distinctUntilChanged { old, new -> old == new }
+        .collectAsStateWithLifecycle(initialValue = SyncState.IDLE)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = FireflyAppTheme.colorScheme.background

@@ -1,8 +1,18 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.round
+
+@Composable
+expect fun <T> StateFlow<T>.collectAsStateWithLifecycle(
+    context: CoroutineContext = EmptyCoroutineContext,
+    initialValue: T
+): State<T>
 
 
 expect fun Double.getDisplayWithCurrency(currencySymbol: String): String

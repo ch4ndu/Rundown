@@ -10,7 +10,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.DateTimeFormat
 
 @Composable
-actual fun LineChart(
+actual fun LineChartNative(
     modifier: Modifier,
     chartDataList: List<ExpenseData>?,
     dateTimeFormatter: DateTimeFormat<LocalDateTime>

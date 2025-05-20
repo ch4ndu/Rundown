@@ -18,6 +18,7 @@ import domain.usecase.SyncWithServerUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -89,7 +90,7 @@ open class AccountOverviewViewModel(
                     endDate = dateRange.endDate
                 ).flowOn(dispatcherProvider.io)
             }
-    }
+    }.toStateFlow(initial = emptyList())
     private val log = logging()
 
     open fun refreshRemoteData() {
@@ -172,7 +173,7 @@ open class AccountOverviewViewModel(
                 }
             }
             tagTotalsMap
-        }
+        }.toStateFlow(initial = emptyMap())
     }
 
     open val transactionsForActiveTag by lazy {
@@ -211,7 +212,7 @@ open class AccountOverviewViewModel(
                         }
                     }
                 }
-            }
+            }.toStateFlow(initial = emptyList())
     }
 
     open val categoriesForAccountWithDate by lazy {
@@ -275,7 +276,7 @@ open class AccountOverviewViewModel(
                 }
             }
             categoriesTotalsMap
-        }
+        }.toStateFlow(initial = emptyMap())
     }
 
     open val transactionsForActiveCategory by lazy {
@@ -312,7 +313,7 @@ open class AccountOverviewViewModel(
                     }.flowOn(dispatcherProvider.io)
                 }
             }
-        }
+        }.toStateFlow(initial = emptyList())
     }
 
     open fun getNewTransactionListForAccount(
@@ -320,12 +321,12 @@ open class AccountOverviewViewModel(
         accountId: Long,
         startDate: LocalDateTime,
         endDate: LocalDateTime
-    ): Flow<List<FireFlyTransaction>> {
+    ): StateFlow<List<FireFlyTransaction>> {
         return transactionRepository.getTransactionByAccountAndDate(
             accountType = accountType,
             accountId = accountId,
             startDate = startDate,
             endDate = endDate
-        )
+        ).toStateFlow(initial = emptyList())
     }
 }

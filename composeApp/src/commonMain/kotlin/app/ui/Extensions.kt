@@ -10,8 +10,64 @@ import app.theme.GrillRed
 import app.theme.WalletLightGreen
 import app.theme.WalletOrange2
 import domain.model.CategorySpending
+import domain.model.ExpenseData
+import domain.model.ExpenseIncomeData
 import getDisplayWithCurrency
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
 import kotlin.math.absoluteValue
+
+fun ExpenseIncomeData.toChartLabel(dateTimeFormatter: DateTimeFormat<LocalDateTime>): AnnotatedString {
+    return buildAnnotatedString {
+        append(date.format(dateTimeFormatter))
+        if (expenseAmount > 0) {
+            val expenseString = "\nExpense: ${expenseAmount.toDouble().getDisplayWithCurrency("$")}"
+            append(expenseString)
+            addStyle(
+                style = SpanStyle(color = GrillRed),
+                start = length - expenseString.length,
+                end = length
+            )
+        }
+        if (incomeAmount > 0) {
+            val incomeStr = "\nIncome: ${incomeAmount.toDouble().getDisplayWithCurrency("$")}"
+            append(incomeStr)
+            addStyle(
+                style = SpanStyle(color = DeltaGekko),
+                start = length - incomeStr.length,
+                end = length
+            )
+        }
+    }
+}
+
+fun ExpenseData.toChartLabel(
+    showSpendingLabel: Boolean,
+    dateTimeFormatter: DateTimeFormat<LocalDateTime>
+): AnnotatedString {
+    return buildAnnotatedString {
+        append(date.format(dateTimeFormatter))
+        if (showSpendingLabel) {
+            val expenseString =
+                "\r\nExpense: ${expenseAmount.toDouble().getDisplayWithCurrency("$")}"
+            append(expenseString)
+            addStyle(
+                style = SpanStyle(color = GrillRed),
+                start = length - expenseString.length,
+                end = length
+            )
+        } else {
+            val expenseString = "\r\n${expenseAmount.toDouble().getDisplayWithCurrency("$")}"
+            append(expenseString)
+            addStyle(
+                style = SpanStyle(color = GrillRed),
+                start = length - expenseString.length,
+                end = length
+            )
+        }
+    }
+}
 
 fun Double.getTextColorForAmount(): Color {
     return if (this.absoluteValue > this) {
