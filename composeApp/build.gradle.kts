@@ -96,6 +96,8 @@ kotlin {
         commonMain.dependencies {
 //            implementation("androidx.paging:paging-common:3.3.5")
 
+//            implementation("org.jetbrains.androidx.savedstate:savedstate:1.3.0-beta01")
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -184,7 +186,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "org.udnahc.firefly.dev"
+        applicationId = "org.udnahc.rundown.dev"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
