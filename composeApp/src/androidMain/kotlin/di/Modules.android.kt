@@ -22,16 +22,16 @@ import app.viewmodel.mock.MockCategoryDetailsViewModel
 import app.viewmodel.mock.MockDailySpendingDetailsViewModel
 import app.viewmodel.mock.MockHomeViewModel
 import app.viewmodel.mock.MockSyncWithServerViewModel
+import com.udnahc.firefly.DailySyncWorker
+import com.udnahc.firefly.ImmediateSync
 import data.PreferenceStore
 import data.database.AppDatabase
 import data.database.getRoomDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
-import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import com.udnahc.firefly.DailySyncWorker
 
 actual val platformModule = module {
     single<AppDatabase> {
@@ -40,6 +40,8 @@ actual val platformModule = module {
     single { PreferenceStore(androidContext()).getDataStore() }
 
     worker { DailySyncWorker(get(), get(), get(), get(), get()) }
+
+    factory { ImmediateSync(androidContext()) }
 }
 
 val serverViewModels = module {

@@ -1,14 +1,8 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.
+# Rundown - A Firefly III Companion App
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Desktop-brightgreen)](https://github.com/your-username/your-project-repo)
+[![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-official-blue)](https://www.jetbrains.com/lp/compose-multiplatform/)
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+This is a companion application for open-source personal finance manager, [Firefly III](https://github.com/firefly-iii/firefly-iii). Built with [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/), this app aims to provide a native experience on Android, iOS, and Desktop platforms while extending the functionality of Firefly III.
 
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+This application stores all transactions locally to enable the generation of custom reports.

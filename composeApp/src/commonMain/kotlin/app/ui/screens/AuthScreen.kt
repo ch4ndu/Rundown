@@ -29,8 +29,6 @@ import androidx.compose.ui.unit.dp
 import app.theme.FireflyAppTheme
 import app.viewmodel.AuthScreenState
 import app.viewmodel.AuthViewModel
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
@@ -58,24 +56,21 @@ fun AuthScreen(
                 Spacer(modifier = Modifier.height(64.dp))
                 OutlinedTextField(
                     modifier = Modifier.padding(horizontal = dimensions.horizontalPadding),
-                    label = { Text(text = "URL") },
+                    label = { Text(text = "URL", style = FireflyAppTheme.typography.bodyMedium)  },
                     value = url,
-                    onValueChange = { url = it }
+                    onValueChange = { url = it },
+                    textStyle = FireflyAppTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 OutlinedTextField(
                     modifier = Modifier.padding(horizontal = dimensions.horizontalPadding),
-                    label = { Text(text = "Token") },
+                    label = { Text(text = "Token", style = FireflyAppTheme.typography.bodyMedium) },
                     value = token,
                     onValueChange = { token = it },
-                    maxLines = 5
+                    maxLines = 5,
+                    textStyle = FireflyAppTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(64.dp))
-//                Button(
-//                    modifier = Modifier.align(Alignment.CenterHorizontally),
-//                    onClick = { onLoginClick.invoke(url, token) }) {
-//                    Text(text = "Login")
-//                }
                 ElevatedButton(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     colors = ButtonDefaults.elevatedButtonColors()
@@ -85,7 +80,7 @@ fun AuthScreen(
                         ),
                     onClick = { onLoginClick.invoke(url, token) }
                 ) {
-                    Text(text = "Login")
+                    Text(text = "Login", style = FireflyAppTheme.typography.titleMedium)
                 }
                 Spacer(modifier = Modifier.height(64.dp))
                 Text(
@@ -101,7 +96,7 @@ fun AuthScreen(
                         ),
                     onClick = runDemoClick
                 ) {
-                    Text(text = "Run Demo")
+                    Text(text = "Run Demo", style = FireflyAppTheme.typography.titleMedium)
                 }
             }
         } else if (uiState.value is AuthScreenState.InProgress) {

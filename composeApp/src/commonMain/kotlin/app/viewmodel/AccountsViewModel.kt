@@ -1,6 +1,7 @@
 package app.viewmodel
 
 import Constants
+import TARGET
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -9,6 +10,7 @@ import data.AppPref
 import di.DispatcherProvider
 import domain.repository.AccountRepository
 import domain.usecase.SyncWithServerUseCase
+import getPlatform
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.lighthousegames.logging.logging
+import scheduleImmediateSync
 
 @OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
 open class AccountsViewModel(
@@ -55,7 +58,11 @@ open class AccountsViewModel(
     open fun refreshData() {
         log.d { "refreshRemoteData" }
         viewModelScope.launch(dispatcherProvider.default) {
-            syncWithServerUseCase.invoke()
+            if (getPlatform().target == TARGET.ANDROID) {
+                scheduleImmediateSync()
+            } else {
+                syncWithServerUseCase.invoke()
+            }
         }
     }
 }

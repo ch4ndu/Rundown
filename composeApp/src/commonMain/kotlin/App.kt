@@ -1,5 +1,6 @@
 @file:OptIn(KoinExperimentalAPI::class)
 
+import TARGET.Companion.isAndroid
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -42,6 +43,11 @@ fun App() {
         KoinContext {
             var authComplete by remember { mutableStateOf(false) }
             var syncNeeded by remember { mutableStateOf(true) }
+            var permissionCheckComplete by remember {
+                mutableStateOf(
+                    getPlatform().target.isAndroid().not()
+                )
+            }
 
             val authViewModel = koinViewModel<AuthViewModel>()
             val onLoginClick = remember {
@@ -65,8 +71,14 @@ fun App() {
                     }
                 )
             } else if (syncNeeded) {
-                FirstSyncScreen {
-                    syncNeeded = false
+                if (permissionCheckComplete) {
+                    FirstSyncScreen {
+                        syncNeeded = false
+                    }
+                } else {
+                    PermissionScreen {
+                        permissionCheckComplete = true
+                    }
                 }
             } else {
                 mainUi(forceShowBottomBarState = remember { mutableStateOf(null) })
