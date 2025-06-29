@@ -19,11 +19,11 @@
 
 package app.navigation
 
-import fireflycomposemultiplatform.composeapp.generated.resources.Res
-import fireflycomposemultiplatform.composeapp.generated.resources.ic_accounts
-import fireflycomposemultiplatform.composeapp.generated.resources.ic_budget
-import fireflycomposemultiplatform.composeapp.generated.resources.ic_categories
-import fireflycomposemultiplatform.composeapp.generated.resources.ic_dashboard
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.ic_accounts
+import rundown.composeapp.generated.resources.ic_budget
+import rundown.composeapp.generated.resources.ic_categories
+import rundown.composeapp.generated.resources.ic_dashboard
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 

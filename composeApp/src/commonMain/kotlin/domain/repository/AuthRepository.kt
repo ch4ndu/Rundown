@@ -24,7 +24,6 @@ package domain.repository
 import data.database.model.accounts.UserInfo
 import data.network.AuthorizationInterceptor
 import data.network.firefly.OAuthService
-import data.network.firefly.SystemInfoService
 import data.network.firefly.createSystemInfoService
 import data.network.getKtorFit
 import domain.AuthState
@@ -73,7 +72,6 @@ class AuthRepository(
     ): AuthState {
         val ktorFit = getKtorFit(baseUrl = url, accessToken = token)
 
-        //TODO fix this once ios compiles
         val systemInfoService = ktorFit.createSystemInfoService()
 
         try {
@@ -110,6 +108,5 @@ class AuthRepository(
                 AuthState.Error("unknown")
             }
         }
-
     }
 }

@@ -21,11 +21,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.StateFlow
+import java.text.NumberFormat
+import java.util.Locale
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.absoluteValue
 
+val formatter: NumberFormat get() = NumberFormat.getInstance(Locale.getDefault())
 
 actual fun Double.getDisplayWithCurrency(currencySymbol: String): String {
-    return this.toString()
+    val formattedBalance = formatter.format(this.roundTo2Digits().absoluteValue)
+    val isNegative =
+        this.div(this.absoluteValue) == -1.0
+    val negativeText = if (isNegative) "-" else ""
+    return "$negativeText$currencySymbol${formattedBalance}"
 }
 
 @Composable

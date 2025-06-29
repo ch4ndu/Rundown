@@ -37,7 +37,7 @@ import platform.Foundation.NSUserDomainMask
 private val log = logging()
 
 fun getRoomDatabase(): AppDatabase {
-    val dbPath = documentDirectory() + "/room_database.db"
+    val dbPath = documentDirectory() + "/rundown.db"
     return Room.databaseBuilder<AppDatabase>(
         name = dbPath,
     )

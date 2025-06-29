@@ -1,4 +1,4 @@
-rootProject.name = "FireFlyComposeMultiplatform"
+rootProject.name = "Rundown"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

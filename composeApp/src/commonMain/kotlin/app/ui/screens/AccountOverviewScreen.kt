@@ -101,8 +101,8 @@ import collectAsStateWithLifecycle
 import data.database.model.transaction.FireFlyTransaction
 import data.enums.ExpenseType
 import domain.model.DateRange
-import fireflycomposemultiplatform.composeapp.generated.resources.Res
-import fireflycomposemultiplatform.composeapp.generated.resources.calendar_month_outline
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.calendar_month_outline
 import getDisplayWithCurrency
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource

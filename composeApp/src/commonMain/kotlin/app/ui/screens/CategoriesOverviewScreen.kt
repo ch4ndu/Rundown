@@ -70,19 +70,14 @@ import app.ui.isLargeScreen
 import app.viewmodel.CategoriesOverviewViewModel
 import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
-import domain.atBeginningOfMonth
-import domain.currentDate
-import domain.minusMonths
 import domain.model.DateRange
-import domain.withEndOfMonthAtEndOfDay
-import domain.withStartOfDay
-import fireflycomposemultiplatform.composeapp.generated.resources.Res
-import fireflycomposemultiplatform.composeapp.generated.resources.calendar_month_outline
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.lighthousegames.logging.logging
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.calendar_month_outline
 
 private val log = logging()
 

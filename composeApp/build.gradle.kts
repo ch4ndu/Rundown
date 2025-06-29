@@ -180,6 +180,9 @@ kotlin {
             implementation(libs.androidx.room.compiler)
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.room.paging)
+            implementation(libs.slf4j.api)
+            implementation(libs.logback.classic)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
@@ -277,8 +280,18 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.udnahc.firefly"
+            packageName = "Rundown"
             packageVersion = "1.0.0"
+            macOS {
+                bundleID = "org.udnahc.rundown"
+                iconFile.set(project.file("src/desktopMain/resources/MyIcon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/launcher.png"))
+            }
+            linux {
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/launcher.png"))
+            }
         }
     }
 }

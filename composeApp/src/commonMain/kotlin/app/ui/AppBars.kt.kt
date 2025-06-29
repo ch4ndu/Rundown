@@ -43,8 +43,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.theme.FireflyAppTheme
-import fireflycomposemultiplatform.composeapp.generated.resources.Res
-import fireflycomposemultiplatform.composeapp.generated.resources.back_navigation_icon
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.back_navigation_icon
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

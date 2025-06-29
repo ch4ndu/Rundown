@@ -20,12 +20,16 @@
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import di.initKoin
+import org.jetbrains.compose.resources.painterResource
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.launcher
 
 fun main() = application {
     initKoin()
         Window(
             onCloseRequest = ::exitApplication,
-            title = "FireFlyComposeMultiplatform",
+            title = "Rundown",
+            icon = painterResource(Res.drawable.launcher)
         ) {
             App()
         }

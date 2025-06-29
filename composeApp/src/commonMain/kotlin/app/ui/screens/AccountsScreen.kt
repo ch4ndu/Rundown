@@ -61,8 +61,8 @@ import app.viewmodel.AccountsViewModel
 import collectAsStateWithLifecycle
 import domain.repository.ConnectivityStateManager
 import domain.repository.HealthCheck
-import fireflycomposemultiplatform.composeapp.generated.resources.Res
-import fireflycomposemultiplatform.composeapp.generated.resources.ic_circle
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.ic_circle
 import getDisplayWithCurrency
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject

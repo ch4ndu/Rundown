@@ -27,13 +27,15 @@ koinComposeMultiplatform = "4.0.4"
 navigationCompose = "2.8.0-alpha10"
 #navigationCompose = "2.9.0-beta01"
 lifecycleViewModel = "2.9.1"
-kmlog = "1.5.0"
+kmlog = "2.0.3"
 
 mpandroidchart = "v3.1.0"
 vico-android = "2.1.3"
 vico-multiplatform = "2.1.3"
 
-work_version = "2.10.1"
+work_version = "2.10.2"
+slf4jApi = "2.0.17"
+logback = "1.5.16"
 
 
 [libraries]
@@ -90,9 +92,9 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "androidx-room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
-okio = "com.squareup.okio:okio:3.9.1"
-kmlog = { module = "org.lighthousegames:logging", version.ref = "kmlog" }
+okio = "com.squareup.okio:okio:3.14.0"
 stately-common = { module = "co.touchlab:stately-common", version = "2.0.5" }
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 #android only
 mp-android-chart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
@@ -103,6 +105,10 @@ vico-multiplatform = { group = "com.patrykandpatrick.vico", name = "multiplatfor
 
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work_version" }
 androidx-koin-work = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koin" }
+
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+kmlog = { module = "org.lighthousegames:logging", version.ref = "kmlog" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
