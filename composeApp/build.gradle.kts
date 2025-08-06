@@ -200,7 +200,7 @@ dependencies {
 }
 
 android {
-    namespace = "com.udnahc.firefly"
+    namespace = "com.udnahc.rundown"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -225,6 +225,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     buildTypes {
         getByName("release") {

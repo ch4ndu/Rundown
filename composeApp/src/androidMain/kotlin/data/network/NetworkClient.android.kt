@@ -19,6 +19,7 @@
 
 package data.network
 
+import com.udnahc.rundown.BuildConfig
 import de.jensklingenberg.ktorfit.Ktorfit
 import de.jensklingenberg.ktorfit.converter.CallConverterFactory
 import de.jensklingenberg.ktorfit.converter.ResponseConverterFactory
@@ -47,11 +48,14 @@ actual fun getKtorFit(
         .connectTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
+    if (BuildConfig.DEBUG) {
+        client
         .addInterceptor(
             HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
         )
+    }
     return ktorfit {
         httpClient(
             HttpClient(OkHttp) {

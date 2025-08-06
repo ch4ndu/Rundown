@@ -41,8 +41,8 @@ import app.viewmodel.mock.MockCategoryDetailsViewModel
 import app.viewmodel.mock.MockDailySpendingDetailsViewModel
 import app.viewmodel.mock.MockHomeViewModel
 import app.viewmodel.mock.MockSyncWithServerViewModel
-import com.udnahc.firefly.DailySyncWorker
-import com.udnahc.firefly.ImmediateSync
+import com.udnahc.rundown.DailySyncWorker
+import com.udnahc.rundown.ImmediateSync
 import data.PreferenceStore
 import data.database.AppDatabase
 import data.database.getRoomDatabase

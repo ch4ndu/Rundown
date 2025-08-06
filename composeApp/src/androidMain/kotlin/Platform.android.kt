@@ -33,6 +33,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import app.theme.FireflyAppTheme
-import com.udnahc.firefly.ImmediateSync
+import com.udnahc.rundown.ImmediateSync
 import org.koin.mp.KoinPlatformTools
 
 class AndroidPlatform : Platform {
@@ -71,16 +72,13 @@ actual fun PermissionScreen(onProceed: () -> Unit) {
     val permissionRequest =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
             hasNotificationPermission = result
-//            if (hasNotificationPermission) {
-//                onProceed()
-//            }
         }
+    LaunchedEffect(hasNotificationPermission) {
+        if (hasNotificationPermission) {
+            onProceed()
+        }
+    }
     val dimensions = FireflyAppTheme.dimensions
-//    LaunchedEffect(canProceed) {
-//        if (canProceed) {
-//            onProceed.invoke()
-//        }
-//    }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = FireflyAppTheme.colorScheme.background
