@@ -13,11 +13,9 @@ This application stores all transactions locally to enable the generation of cus
 
 ## Demo
 
-Check out this demonstration of the application:
+The app has a demo mode that you can enter on first launch.
 
-[![App Demo Preview](docs/demo_preview.png)](docs/demo.mp4)
-
-*Click the preview image above to watch the full demo (MP4).*
+![App Demonstration](docs/demo.gif)
 
 
 This work [is licensed](https://github.com/ch4ndu/Rundown/blob/master/LICENSE) under
