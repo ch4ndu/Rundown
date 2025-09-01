@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.model.MergeMode
 import app.theme.FireflyAppTheme
 import app.ui.AppBarWithBack
@@ -51,10 +52,8 @@ import app.ui.getAspectRatio
 import app.ui.isLargeScreen
 import app.ui.isScrollingUp
 import app.viewmodel.AccountCashFlowDetailsViewModel
-import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseIncomeData
-import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 

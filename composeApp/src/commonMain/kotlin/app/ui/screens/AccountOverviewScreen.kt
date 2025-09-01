@@ -82,6 +82,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.model.TotalsSummary
 import app.theme.DarkGrey
 import app.theme.FireflyAppTheme
@@ -97,18 +98,17 @@ import app.ui.isScrollingUp
 import app.ui.screenWidth
 import app.viewmodel.AccountChartsViewModel
 import app.viewmodel.AccountOverviewViewModel
-import collectAsStateWithLifecycle
 import data.database.model.transaction.FireFlyTransaction
 import data.enums.ExpenseType
 import domain.model.DateRange
-import rundown.composeapp.generated.resources.Res
-import rundown.composeapp.generated.resources.calendar_month_outline
 import getDisplayWithCurrency
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.lighthousegames.logging.logging
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.calendar_month_outline
 
 private const val TAG = "AccountOverviewScreen"
 private val log = logging()
@@ -416,45 +416,6 @@ private fun ShowTopBarWithCalendar(
                     }
                 }
             }
-//            TopAppBarActionButton(
-//                painterResource(resource = Res.drawable.filter_menu),
-//                description = "Filter"
-//            ) {
-//            }
-//            TopAppBarActionButton(
-//                imageVector = Icons.Outlined.MoreVert,
-//                description = "Options"
-//            ) {
-//                dropDownMenuExpanded.value = true
-//            }
-//
-//            DropdownMenu(
-//                expanded = dropDownMenuExpanded.value,
-//                onDismissRequest = {
-//                    dropDownMenuExpanded.value = false
-//                },
-//                offset = DpOffset(x = 10.dp, y = (-60).dp)
-//            ) {
-//                DropdownMenuItem(
-//                    text = {
-//                        Text("Refresh")
-//                    },
-//                    onClick = {
-////                        Toast.makeText(context, "Refresh Click", Toast.LENGTH_SHORT)
-////                            .show()
-//                        dropDownMenuExpanded.value = false
-//                    })
-//
-//                DropdownMenuItem(
-//                    text = {
-//                        Text("Settings")
-//                    },
-//                    onClick = {
-////                        Toast.makeText(context, "Settings Click", Toast.LENGTH_SHORT)
-////                            .show()
-//                        dropDownMenuExpanded.value = false
-//                    })
-//            }
         }
     )
 

@@ -42,9 +42,3 @@ actual fun Double.getDisplayWithCurrency(currencySymbol: String): String {
 @Composable
 actual fun BackHandler(onBack: () -> Unit) {
 }
-
-@Composable
-actual fun <T> StateFlow<T>.collectAsStateWithLifecycle(
-    context: CoroutineContext,
-    initialValue: T
-): State<T> = collectAsState(context)

@@ -22,22 +22,17 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.toArgb
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.DeltaGekko
 import app.theme.GrillRed
 import domain.model.ExpenseData
 import domain.model.ExpenseIncomeData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeFormat
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
-import kotlin.coroutines.CoroutineContext
 import kotlin.math.absoluteValue
 
 val amountDecimalFormat = DecimalFormat("$###,###.##").apply { minimumFractionDigits = 2 }
@@ -97,10 +92,3 @@ fun ExpenseData.toChartLabel(
 actual fun BackHandler(onBack: () -> Unit) {
     BackHandler(enabled = true, onBack = onBack)
 }
-
-@Composable
-actual fun <T> StateFlow<T>.collectAsStateWithLifecycle(
-    context: CoroutineContext,
-    initialValue: T
-): State<T> =
-    collectAsStateWithLifecycle(context = context, initialValue = initialValue)

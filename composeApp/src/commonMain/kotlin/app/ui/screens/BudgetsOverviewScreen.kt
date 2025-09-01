@@ -55,13 +55,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.ui.BarChart
 import app.ui.DetailsIconButton
 import app.ui.Savers
 import app.ui.ThemedBox
 import app.viewmodel.BudgetListOverviewViewModel
-import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
 import domain.atBeginningOfMonth
 import domain.currentDate

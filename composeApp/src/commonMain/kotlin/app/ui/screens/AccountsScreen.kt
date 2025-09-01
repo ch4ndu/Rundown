@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.ui.AppBarWithOptions
 import app.ui.ThemedCard
@@ -58,17 +59,16 @@ import app.ui.TopAppBarActionButton
 import app.ui.TopAppBarIcon
 import app.ui.getTextColorForAmount
 import app.viewmodel.AccountsViewModel
-import collectAsStateWithLifecycle
 import domain.repository.ConnectivityStateManager
 import domain.repository.HealthCheck
-import rundown.composeapp.generated.resources.Res
-import rundown.composeapp.generated.resources.ic_circle
 import getDisplayWithCurrency
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.lighthousegames.logging.logging
+import rundown.composeapp.generated.resources.Res
+import rundown.composeapp.generated.resources.ic_circle
 
 private val log = logging()
 

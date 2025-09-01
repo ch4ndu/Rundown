@@ -35,12 +35,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.ui.AppBarWithBack
 import app.ui.BarChart
 import app.ui.TransactionItem
 import app.viewmodel.DailySpendingDetailsViewModel
-import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseData
 import org.koin.compose.viewmodel.koinViewModel

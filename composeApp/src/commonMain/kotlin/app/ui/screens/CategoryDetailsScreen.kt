@@ -38,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.theme.FireflyAppTheme
 import app.ui.AppBarWithBack
 import app.ui.BarChart
@@ -45,7 +46,6 @@ import app.ui.TransactionItem
 import app.ui.getAspectRatio
 import app.ui.isLargeScreen
 import app.viewmodel.CategoryDetailsViewModel
-import collectAsStateWithLifecycle
 import data.database.serializers.DateSerializer
 import domain.model.ExpenseIncomeData
 import org.koin.compose.viewmodel.koinViewModel

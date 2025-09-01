@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
-import app.model.TotalsSummary
 import app.theme.Cyan
 import app.theme.DeltaGekko
 import app.theme.EnglishRed
@@ -44,7 +43,6 @@ import app.theme.WalletOrange
 import app.theme.WalletRed
 import app.theme.WalletYellow
 import com.github.mikephil.charting.charts.Chart
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -66,16 +64,6 @@ actual fun PieChart(
     val textColor = FireflyAppTheme.colorScheme.onSurface.toArgb()
     val entries = mutableListOf<PieEntry>()
     for (entry in pieEntriesMap.entries) {
-        var sum = 0f
-//        if (types.contains(ExpenseType.EXPENSE)) {
-//        sum += entry.value.expenseSum.toFloat()
-//        }
-//        if (types.contains(ExpenseType.TRANSFER)) {
-//        sum += entry.value.transferSum.toFloat()
-//        }
-//        if (types.contains(ExpenseType.INCOME)) {
-//        sum += entry.value.incomeSum.toFloat()
-//        }
         entries.add(PieEntry(entry.value.toFloat(), entry.key))
     }
     val pieDataSet = PieDataSet(entries, "")
